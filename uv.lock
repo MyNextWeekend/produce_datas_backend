@@ -249,9 +249,9 @@ standard = [
 ]
 
 [[package]]
-name = "fastapiproject"
+name = "fastapi-project"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "docker" },
     { name = "fastapi", extra = ["standard"] },

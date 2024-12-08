@@ -1,7 +1,6 @@
 import datetime
 
 from fastapi import APIRouter
-from fastapi.encoders import jsonable_encoder
 
 from .. import models, schemas
 from ..dependencies import SessionDep
@@ -24,12 +23,12 @@ async def project_add(project: schemas.Repository, session: SessionDep):
         update_by="admin",
         update_time=datetime.datetime.now(),
     )
-    session.add(info)
-    session.commit()
-    session.flush()
+    # session.add(info)
+    # session.commit()
+    # session.flush()
     logger.info("good")
     # 存入数据库
-    return schemas.Response(data=jsonable_encoder(info))
+    return schemas.Response.ok(data=info)
 
 
 @router.post("/project/modify", summary="修改git配置")
