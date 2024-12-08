@@ -7,14 +7,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    # 项目的根目录
+    root_dir: PosixPath = Path(__file__).resolve().parent.parent
+
     model_config = SettingsConfigDict(
-        # 配置文件位置，取决于在什么位置启动服务
-        env_file=".env",
+        # 配置文件位置，项目根目录 .env 文件
+        env_file=os.path.join(root_dir, ".env"),
         env_ignore_empty=True,
         extra="ignore",
     )
-    # 项目的根目录
-    root_dir: PosixPath = Path(__file__).resolve().parent.parent
+
     # 日志文件位置
     log_file: str = os.path.join(root_dir, "logs", "system.log")
 
