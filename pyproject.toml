@@ -2,9 +2,7 @@
 name = "fastapi_project"
 version = "0.1.0"
 description = "Add your description here"
-authors = [
-    { name = "MyNextWeekend", email = "jinhu007@outlook.com" }
-]
+authors = [{ name = "MyNextWeekend", email = "jinhu007@outlook.com" }]
 dependencies = [
     "fastapi[standard]>=0.115.4",
     "uvicorn>=0.32.0",
@@ -15,23 +13,15 @@ dependencies = [
     "kafka-python>=2.0.2",
     "pydantic-settings>=2.6.1",
 ]
+
 readme = "README.md"
 requires-python = ">= 3.8"
 
-#[build-system]
-#requires = ["hatchling"]
-#build-backend = "hatchling.build"
-
-#[tool.hatch.metadata]
-#allow-direct-references = true
-
-#[tool.hatch.build.targets.wheel]
-#packages = ["src/fastapiproject"]
+[tool.pytest.ini_options]
+pythonpath = ["app"]
 
 [dependency-groups]
-dev = [
-    "pytest>=8.3.3",
-]
+dev = ["pytest>=8.3.3"]
 
 
 # uv 配置下载源地址
@@ -44,21 +34,16 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
     "ARG001", # unused arguments in functions
 ]
-ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
-    "W191",  # indentation contains tabs
-    "B904",  # Allow raising exceptions without from e, for HTTPException
-]
+
 
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.

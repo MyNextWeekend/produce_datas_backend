@@ -1,5 +1,6 @@
-import git
 import os
+
+import git
 
 
 def git_clone(git_url, repo_dir):
