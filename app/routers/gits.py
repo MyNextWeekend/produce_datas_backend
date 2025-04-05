@@ -2,19 +2,21 @@ import datetime
 
 from fastapi import APIRouter
 
-from .. import models, schemas
-from ..dependencies import SessionDep
-from ..utils import LogUtil
+from app import schemas
+from app.dependencies import SessionDep
+from app.models import ProjectInfo
+from app.schemas import Response
+from app.utils import LogUtil
 
 logger = LogUtil().get_logger()
 
-router = APIRouter(prefix="/git")
+router = APIRouter(prefix="/git", tags=["git操作"])  # 接口文档中的标签
 
 
-@router.post("/project/add", summary="新增git配置", response_model=schemas.Response[models.ProjectInfo])
-async def project_add(project: schemas.Repository, session: SessionDep):
+@router.post("/project/add", summary="新增git配置", response_model=Response[ProjectInfo])
+async def project_add(project: schemas.Repository, session: SessionDep) -> Response[ProjectInfo]:
     # 校验仓库地址是否有效
-    info = models.ProjectInfo(
+    info = ProjectInfo(
         repository_name=project.repository_name,
         repository_url=project.repository_url,
         description=project.description,
@@ -28,7 +30,7 @@ async def project_add(project: schemas.Repository, session: SessionDep):
     # session.flush()
     logger.info("good")
     # 存入数据库
-    return schemas.Response.ok(data=info)
+    return schemas.Response[ProjectInfo].ok(data=info)
 
 
 @router.post("/project/modify", summary="修改git配置")

@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 from app.main import app
-from app.models.base import engine
+from app.models import engine
 
 
 @pytest.fixture(scope="session", autouse=True)
