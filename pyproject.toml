@@ -21,7 +21,10 @@ requires-python = ">= 3.8"
 pythonpath = ["app"]
 
 [dependency-groups]
-dev = ["pytest>=8.3.3"]
+dev = [
+    "pytest>=8.3.3",
+    "sqlacodegen>=2.3.0",
+]
 
 
 # uv 配置下载源地址
