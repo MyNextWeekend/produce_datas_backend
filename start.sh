@@ -5,7 +5,7 @@ APP_MODULE="app.main:app"
 PID_FILE="fastapi_app.pid"
 
 start() {
-    if [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null; then
+    if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
         echo "$APP_NAME is already running."
     else
         echo "Starting $APP_NAME..."
@@ -16,9 +16,9 @@ start() {
 }
 
 stop() {
-    if [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null; then
+    if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
         echo "Stopping $APP_NAME..."
-        kill -9 $(cat "$PID_FILE") && rm -f "$PID_FILE"
+        kill "$(cat "$PID_FILE")" && rm -f "$PID_FILE"
         echo "$APP_NAME stopped."
     else
         echo "$APP_NAME is not running."
