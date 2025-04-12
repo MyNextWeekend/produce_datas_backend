@@ -18,7 +18,14 @@ class Settings(BaseSettings):
     )
 
     # 日志文件位置
-    log_file: str = os.path.join(root_dir, "logs", "system.log")
+    # log_file: str = os.path.join(root_dir, "logs", "system.log")
+    @computed_field
+    @property
+    def log_file(self) -> str:
+        log_path = os.path.join(self.root_dir, "logs")
+        if not os.path.exists(log_path):
+            os.makedirs(log_path)
+        return os.path.join(log_path, "system.log")
 
     # 数据库配置
     db_host: str
