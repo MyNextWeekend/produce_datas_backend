@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         # 配置文件位置，项目根目录 .env 文件
-        env_file=os.path.join(root_dir, ".env"),
+        env_file=root_dir.joinpath('.env'),
         env_ignore_empty=True,
         extra="ignore",
     )
@@ -22,10 +22,10 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def log_file(self) -> str:
-        log_path = os.path.join(self.root_dir, "logs")
-        if not os.path.exists(log_path):
-            os.makedirs(log_path)
-        return os.path.join(log_path, "system.log")
+        log_path = self.root_dir.joinpath('logs')
+        if not log_path.is_dir():
+            log_path.mkdir(exist_ok=True)
+        return str(log_path.joinpath('system.log'))
 
     # 数据库配置
     db_host: str
