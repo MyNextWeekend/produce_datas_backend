@@ -18,18 +18,18 @@ router = APIRouter(prefix="/parameter", tags=["参数"])
 
 
 @router.get("/", description="查询所有", response_model=Resp[List[CustomParameter]])
-async def get_endpoints(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[CustomParameter]]:
+async def get_parameters(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[CustomParameter]]:
     statement = select(CustomParameter).offset(skip).limit(limit)
     return Resp.success(session.exec(statement).all())
 
 
 @router.get("/{item_id}", description="查询单个", response_model=Resp[CustomParameter])
-async def get_endpoint(item_id: int, session: SessionDep) -> Resp[CustomParameter]:
+async def get_parameter(item_id: int, session: SessionDep) -> Resp[CustomParameter]:
     return Resp.success(session.get(CustomParameter, item_id))
 
 
 @router.delete("/{item_id}", description="删除单个", response_model=Resp[CustomParameter])
-async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[CustomParameter]:
+async def delete_parameter(item_id: int, session: SessionDep) -> Resp[CustomParameter]:
     custom_parameter = session.get(CustomParameter, item_id)
     if CustomParameter is None:
         raise BusinessException(ErrorEnum.NOT_FOUND)
@@ -39,7 +39,7 @@ async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[CustomParam
 
 
 @router.post("/", description="新增单个", response_model=Resp[CustomParameter])
-async def create_endpoint(custom_parameter: CustomParameter, session: SessionDep) -> Resp[CustomParameter]:
+async def create_parameter(custom_parameter: CustomParameter, session: SessionDep) -> Resp[CustomParameter]:
     custom_parameter = CustomParameter(key_name=custom_parameter.key_name, value=custom_parameter.value)
     session.add(custom_parameter)
     session.commit()
@@ -47,7 +47,7 @@ async def create_endpoint(custom_parameter: CustomParameter, session: SessionDep
 
 
 @router.put("/", description="修改单个", response_model=Resp[CustomParameter])
-async def update_endpoint(custom_parameter: CustomParameter, session: SessionDep) -> Resp[CustomParameter]:
+async def update_parameter(custom_parameter: CustomParameter, session: SessionDep) -> Resp[CustomParameter]:
     db_custom_parameter = session.get(CustomParameter, custom_parameter.id)
     if db_custom_parameter is None:
         raise BusinessException(ErrorEnum.NOT_FOUND)

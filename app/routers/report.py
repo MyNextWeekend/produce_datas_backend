@@ -17,11 +17,11 @@ router = APIRouter(prefix="/report", tags=["报告"])
 
 
 @router.get("/", description="查询所有", response_model=Resp[List[Report]])
-async def get_endpoints(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[Report]]:
+async def get_reports(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[Report]]:
     statement = select(Report).offset(skip).limit(limit)
     return Resp.success(session.exec(statement).all())
 
 
 @router.get("/{item_id}", description="查询单个", response_model=Resp[Report])
-async def get_endpoint(item_id: int, session: SessionDep) -> Resp[Report]:
+async def get_report(item_id: int, session: SessionDep) -> Resp[Report]:
     return Resp.success(session.get(Report, item_id))
