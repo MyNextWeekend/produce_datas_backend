@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "usernamehw.errorlens",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "gruntfuggly.todo-tree",
+        "rioukkevin.vscode-git-commit",
+    ]
+}
