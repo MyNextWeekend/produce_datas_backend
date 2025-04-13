@@ -6,7 +6,7 @@ from .wrapper_utils import singleton
 
 
 @singleton
-class LogUtil:
+class Log:
 
     def __init__(self):
         # 如果已经初始化了就不再执行，避免重复添加handle

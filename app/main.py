@@ -2,10 +2,10 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from .routers import gits, tasks
-from .utils import LogUtil
+from app.routers import endpoint
+from app.utils.log_utils import Log
 
-logger = LogUtil().get_logger()
+logger = Log().get_logger()
 
 
 @asynccontextmanager
@@ -26,5 +26,7 @@ app = FastAPI(lifespan=lifespan)
 # register_middleware_handle(app)
 
 # 子路由
-app.include_router(gits.router, tags=["项目操作"])  # 接口文档中的标签
-app.include_router(tasks.router, tags=["任务操作"])
+app.include_router(endpoint.router)
+
+# 启动命令
+# uv run uvicorn app.main:app --host 0.0.0.0 --port 8080

@@ -2,9 +2,10 @@ from collections.abc import Generator
 from typing import Annotated
 
 from fastapi import Depends
+from sqlalchemy import create_engine
 from sqlmodel import Session
 
-from .models import engine
+from app.config import settings
 
 
 def get_query_token():
@@ -13,6 +14,9 @@ def get_query_token():
 
 def get_token_header():
     print("get_token_header")
+
+
+engine = create_engine(str(settings.sqlmodel_database_uri), echo=True, pool_size=8, pool_recycle=60 * 30)
 
 
 def get_session() -> Generator[Session, None, None]:

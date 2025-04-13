@@ -2,7 +2,7 @@ from sqlacodegen.generators import SQLModelGenerator
 from sqlalchemy import MetaData
 
 from app.config import settings
-from app.models import engine
+from app.dependencies import engine
 
 
 def get_table_info():
@@ -13,8 +13,13 @@ def get_table_info():
 
 
 def write_file(info: str):
-    file = settings.root_dir.joinpath("sqlmodel").joinpath(settings.db_database)
-    with open(file, "w") as f:
+    file = settings.root_dir.joinpath("app").joinpath("models")
+    with open(file.joinpath(f"{settings.db_database}_model.py"), "w") as f:
+        f.write(f"# {'=' * 69}\n")
+        f.write(f"# {'=' * 10}")
+        f.write(" Automatically generate file, do not modify it ! ")
+        f.write(f"{'=' * 10}\n")
+        f.write(f"# {'=' * 69}\n")
         f.write(info)
 
 

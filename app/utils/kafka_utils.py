@@ -1,7 +1,6 @@
 import json
-import time
 
-from kafka import KafkaConsumer, KafkaProducer, TopicPartition, KafkaAdminClient
+from kafka import KafkaAdminClient, KafkaConsumer, KafkaProducer, TopicPartition
 
 
 class KafkaUtils:
