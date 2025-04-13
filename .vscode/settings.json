@@ -1,7 +1,6 @@
 {
-    "python.testing.pytestEnabled": true,   // 启用 pytest 测试框架
+    "python.testing.pytestEnabled": true, // 启用 pytest 测试框架
     "python.testing.cwd": "${workspaceFolder}/tests", // 设置测试目录为 tests
-
     "files.exclude": { // 配置vscode不显示文件
         "**/__pycache__": true,
         "**/.pytest_cache": true
@@ -15,4 +14,6 @@
         },
     },
     "python.analysis.typeCheckingMode": "standard", // 设置类型检查模式为标准
+    "gitblame.inlineMessageEnabled": true,
+    "gitblame.inlineMessageFormat": "${author.name}, (${time.ago}) · ${commit.summary}"
 }
