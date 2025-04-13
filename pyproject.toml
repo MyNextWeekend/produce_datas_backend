@@ -38,8 +38,8 @@ line-length = 120
 
 [tool.ruff.format]
 quote-style = "double" # use double quotes for strings.
-indent-style = "space" #indent with spaces, rather than tabs.
-line-ending = "auto"   #automatically detect the appropriate line ending.
+indent-style = "space" # indent with spaces, rather than tabs.
+line-ending = "auto"   # automatically detect the appropriate line ending.
 
 [tool.ruff.lint]
 select = [
@@ -57,15 +57,11 @@ select = [
     "RUF",
 ]
 
-# ignore = [
-#     "E501", # line too long
-#     "E203", # whitespace before ':'
-#     "E722", # do not use bare 'except'
+ignore = [
+    "RUF003", # Full width comma
 #     "F401", # module imported but unused
 #     "F841", # local variable is assigned to but never used
-#     "B008", # do not call assert false
-#     "C4",   # flake8-comprehensions
-# ]
+]
 
 # [tool.ruff.lint.isort]
 # required-imports = ["from __future__ import annotations"]

@@ -15,5 +15,5 @@
     },
     "python.analysis.typeCheckingMode": "standard", // 设置类型检查模式为标准
     "gitblame.inlineMessageEnabled": true,
-    "gitblame.inlineMessageFormat": "${author.name}, (${time.ago}) · ${commit.summary}"
+    "gitblame.inlineMessageFormat": "${author.name}(${time.ago}) · ${commit.summary}"
 }
