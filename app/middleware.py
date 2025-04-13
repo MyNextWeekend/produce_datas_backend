@@ -4,6 +4,10 @@ from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
+from app.utils.log_utils import Log
+
+logger = Log().get_logger()
+
 
 class UseTimeMiddleware(BaseHTTPMiddleware):
     """ 计算耗时中间件"""
@@ -22,9 +26,11 @@ class UseTimeMiddleware(BaseHTTPMiddleware):
 
 
 def register_middleware_handle(server: FastAPI):
+    logger.info("register middleware handle...")
     # 添加token验证中间件
     # server.add_middleware(TokenMiddleware)
     # 添加耗时请求中间件
     server.add_middleware(UseTimeMiddleware)
     # 测试
     # server.add_middleware(TestMiddleware)
+    logger.info("register middleware handle successfully.")
