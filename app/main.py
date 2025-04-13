@@ -36,5 +36,10 @@ app.include_router(endpoint.router)
 app.include_router(parameter.router)
 app.include_router(repository.router)
 
-# 启动命令
+# 手动启动命令
 # uv run uvicorn app.main:app --host 0.0.0.0 --port 8080
+if __name__ == '__main__':
+    import uvicorn
+
+    # 断点调试使用
+    uvicorn.run(app="main:app", host='0.0.0.0', port=8080, reload=True)
