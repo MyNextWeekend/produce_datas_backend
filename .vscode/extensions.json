@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "usernamehw.errorlens",
+        "ms-python.python",
         "ms-python.vscode-pylance",
         "charliermarsh.ruff",
         "gruntfuggly.todo-tree",
