@@ -1,6 +1,7 @@
 """
 参数信息
 """
+
 from typing import List
 
 from fastapi import APIRouter
@@ -51,8 +52,8 @@ async def update_parameter(custom_parameter: CustomParameter, session: SessionDe
     db_custom_parameter = session.get(CustomParameter, custom_parameter.id)
     if db_custom_parameter is None:
         raise BusinessException(ErrorEnum.NOT_FOUND)
-    custom_parameter = custom_parameter.model_dump(exclude_unset=True)
-    db_custom_parameter.sqlmodel_update(custom_parameter)
+    custom_parameter_dic = custom_parameter.model_dump(exclude_unset=True)
+    db_custom_parameter.sqlmodel_update(custom_parameter_dic)
     session.add(db_custom_parameter)
     session.commit()
     session.refresh(db_custom_parameter)

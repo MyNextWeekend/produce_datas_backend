@@ -1,6 +1,7 @@
 """
 接口配置信息
 """
+
 from typing import List
 
 from fastapi import APIRouter
@@ -40,8 +41,14 @@ async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
 
 @router.post("/", description="新增单个", response_model=Resp[Endpoint])
 async def create_endpoint(endpoint: Endpoint, session: SessionDep) -> Resp[Endpoint]:
-    endpoint = Endpoint(name=endpoint.name, code=endpoint.code, method=endpoint.method, path=endpoint.path,
-                        description=endpoint.description, domain_code=endpoint.domain_code)
+    endpoint = Endpoint(
+        name=endpoint.name,
+        code=endpoint.code,
+        method=endpoint.method,
+        path=endpoint.path,
+        description=endpoint.description,
+        domain_code=endpoint.domain_code,
+    )
     session.add(endpoint)
     session.commit()
     return Resp.success(endpoint)
@@ -52,8 +59,8 @@ async def update_endpoint(endpoint_new: Endpoint, session: SessionDep) -> Resp[E
     db_endpoint = session.get(Endpoint, endpoint_new.id)
     if db_endpoint is None:
         raise BusinessException(ErrorEnum.NOT_FOUND)
-    endpoint_new = endpoint_new.model_dump(exclude_unset=True)
-    db_endpoint.sqlmodel_update(endpoint_new)
+    endpoint_dic = endpoint_new.model_dump(exclude_unset=True)
+    db_endpoint.sqlmodel_update(endpoint_dic)
     session.add(db_endpoint)
     session.commit()
     session.refresh(db_endpoint)

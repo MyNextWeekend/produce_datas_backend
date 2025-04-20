@@ -1,6 +1,7 @@
 """
 数据库配置
 """
+
 from typing import List
 
 from fastapi import APIRouter
@@ -51,8 +52,8 @@ async def update_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
     db_domain = session.get(Domain, domain.id)
     if db_domain is None:
         raise BusinessException(ErrorEnum.NOT_FOUND)
-    domain = domain.model_dump(exclude_unset=True)
-    db_domain.sqlmodel_update(domain)
+    domain_dic = domain.model_dump(exclude_unset=True)
+    db_domain.sqlmodel_update(domain_dic)
     session.add(db_domain)
     session.commit()
     session.refresh(db_domain)
