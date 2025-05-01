@@ -1,4 +1,3 @@
-import os.path
 from pathlib import Path, PosixPath
 
 from pydantic import PostgresDsn, computed_field
@@ -9,6 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # 项目的根目录
     root_dir: PosixPath = Path(__file__).resolve().parent.parent
+    local_repository: PosixPath = root_dir / 'local_repository'
 
     model_config = SettingsConfigDict(
         # 配置文件位置，项目根目录 .env 文件

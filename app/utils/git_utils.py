@@ -1,5 +1,5 @@
-import os
 import re
+from pathlib import Path
 
 import git
 
@@ -16,7 +16,7 @@ class GitUtil:
         :param git_url: 远程地址
         """
         self.git_url = git_url
-        self.repo_dir = settings.root_dir.joinpath("local_repository", self.get_repo_name())
+        self.repo_dir = settings.local_repository.joinpath(self.get_repo_name())
 
     def get_repo_name(self):
         # 处理SSH格式 (git@github.com:username/repo.git)
@@ -24,18 +24,18 @@ class GitUtil:
         ssh_match = re.search(ssh_pattern, self.git_url)
         if ssh_match:
             path = ssh_match.group(1)
-            return os.path.basename(path)
+            return Path(path).name
 
         # 处理HTTPS格式 (https://github.com/username/repo.git)
         https_pattern = r'https?://.*?/(.*?)(\.git)?$'
         https_match = re.search(https_pattern, self.git_url)
         if https_match:
             path = https_match.group(1)
-            return os.path.basename(path)
+            return Path(path).name
 
     def clone(self):
         """克隆指定的 Git 仓库到给定目录"""
-        if os.path.isdir(self.repo_dir):
+        if self.repo_dir.is_dir():
             logger.warning(f"目标目录已存在: {self.repo_dir} 改为从远程拉取最新数据")
             self.pull()
             return None
@@ -81,6 +81,7 @@ if __name__ == "__main__":
     # remote_url = f"https://{token}@github.com/MyNextWeekend/fastapi_project.git"
 
     git_obj = GitUtil(remote_url)
+    print(git_obj.repo_dir)
     # git_obj.clone()
     # print(git_obj.get_repo_name())
-    print(git_obj.list_branches())
+    # print(git_obj.list_branches())
