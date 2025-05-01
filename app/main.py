@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app.exception import register_exception_handle
 from app.middleware import register_middleware_handle
-from app.routers import domain, endpoint, parameter, repository
+from app.routers import domain, endpoint, hello, parameter, repository
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()
@@ -18,7 +18,7 @@ async def lifespan(_app: FastAPI):
     logger.info("web init...")
     # create_table()  # 启动服务器做一些事情
     yield
-    pass  # 关闭服务后做一些事情
+    # 关闭服务后做一些事情  pass
     logger.info("web stopped !!!")
 
 
@@ -31,6 +31,7 @@ register_middleware_handle(app)
 register_exception_handle(app)
 
 # 子路由
+app.include_router(hello.router)
 app.include_router(domain.router)
 app.include_router(endpoint.router)
 app.include_router(parameter.router)
