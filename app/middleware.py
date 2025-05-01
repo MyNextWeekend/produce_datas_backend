@@ -22,13 +22,17 @@ class UseTimeMiddleware(BaseHTTPMiddleware):
         result.headers["X-Process-Time"] = f"{process_time * 1000:.2f}"
         return result
 
+
 class TraceIDMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """请求头获取 trace_id 并设置到上下文中，最终返回用户"""
         trace_id_header = request.headers.get('X-Trace-Id', str(uuid.uuid4()).replace("-", ""))
-        trace_id.set(trace_id_header)
-        response = await call_next(request)
-        response.headers['X-Trace-Id'] = trace_id_header
+        token = trace_id.set(trace_id_header)
+        try:
+            response = await call_next(request)
+            response.headers['X-Trace-Id'] = trace_id_header
+        finally:
+            trace_id.reset(token)  # 重置trace_id
         return response
 
 
