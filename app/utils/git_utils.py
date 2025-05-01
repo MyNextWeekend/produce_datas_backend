@@ -1,7 +1,9 @@
 import os
+import re
 
 import git
 
+from app.config import settings
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()
@@ -9,19 +11,35 @@ logger = Log().get_logger()
 
 class GitUtil:
 
-    def __init__(self, repo_dir: str, git_url: str = None):
+    def __init__(self, git_url: str = None):
         """
         :param git_url: 远程地址
-        :param repo_dir: 仓库本地目录
         """
-        self.repo_dir = repo_dir
         self.git_url = git_url
+        self.repo_dir = settings.root_dir.joinpath("local_repository", self.get_repo_name())
+
+    def get_repo_name(self):
+        # 处理SSH格式 (git@github.com:username/repo.git)
+        ssh_pattern = r'git@.*?:(.*?)(\.git)?$'
+        ssh_match = re.search(ssh_pattern, self.git_url)
+        if ssh_match:
+            path = ssh_match.group(1)
+            return os.path.basename(path)
+
+        # 处理HTTPS格式 (https://github.com/username/repo.git)
+        https_pattern = r'https?://.*?/(.*?)(\.git)?$'
+        https_match = re.search(https_pattern, self.git_url)
+        if https_match:
+            path = https_match.group(1)
+            return os.path.basename(path)
 
     def clone(self):
         """克隆指定的 Git 仓库到给定目录"""
         if os.path.isdir(self.repo_dir):
-            logger.error(f"目标目录已存在: {self.repo_dir}")
-            raise RuntimeError(f"目标目录已存在: {self.repo_dir}")
+            logger.warning(f"目标目录已存在: {self.repo_dir} 改为从远程拉取最新数据")
+            self.pull()
+            return None
+            # raise RuntimeError(f"目标目录已存在: {self.repo_dir}")
         if self.git_url is None:
             logger.error("远程 url 为空")
             raise RuntimeError("远程 url 为空")
@@ -55,12 +73,13 @@ class GitUtil:
 if __name__ == "__main__":
     local_dir = "/Users/weekend/workSpaces/pycharmProjects/fastapi_project/aaa"
     # 如果配置了 ssh 密钥认证
-    # remote_url = "git@github.com:MyNextWeekend/fastapi_project.git"
+    remote_url = "git@github.com:MyNextWeekend/fastapi_project.git"
     # 也可以执行提供账号密码(不安全不推荐)
     # remote_url="https://username:password@github.com/your-username/your-repo.git"
     # 使用访问令牌通常比使用密码更安全
     token = "ghp_dajiblVNtaXWhmTT0gVjxxxxxxxxxx"
-    remote_url = f"https://{token}@github.com/MyNextWeekend/fastapi_project.git"
+    # remote_url = f"https://{token}@github.com/MyNextWeekend/fastapi_project.git"
 
-    git_obj = GitUtil(local_dir, remote_url)
+    git_obj = GitUtil(remote_url)
     git_obj.clone()
+    # print(git_obj.get_repo_name())
