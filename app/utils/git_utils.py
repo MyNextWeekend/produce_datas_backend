@@ -67,7 +67,7 @@ class GitUtil:
     def list_branches(self):
         """列出所有分支"""
         repo = git.Repo(self.repo_dir)
-        return [branch.name for branch in repo.branches()]
+        return [branch.name for branch in repo.branches]
 
 
 if __name__ == "__main__":
@@ -81,5 +81,6 @@ if __name__ == "__main__":
     # remote_url = f"https://{token}@github.com/MyNextWeekend/fastapi_project.git"
 
     git_obj = GitUtil(remote_url)
-    git_obj.clone()
+    # git_obj.clone()
     # print(git_obj.get_repo_name())
+    print(git_obj.list_branches())
