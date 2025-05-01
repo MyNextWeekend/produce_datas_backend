@@ -18,18 +18,18 @@ logger = Log().get_logger()
 router = APIRouter(prefix="/domain", tags=["域名环境"])
 
 
-@router.get("/", description="查询所有", response_model=Resp[List[Domain]])
+@router.get("/", summary="查询所有")
 async def get_domains(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[Domain]]:
     statement = select(Domain).offset(skip).limit(limit)
     return Resp.success(session.exec(statement).all())
 
 
-@router.get("/{item_id}", description="查询单个", response_model=Resp[Domain])
+@router.get("/{item_id}", summary="查询单个")
 async def get_domain(item_id: int, session: SessionDep) -> Resp[Domain]:
     return Resp.success(session.get(Domain, item_id))
 
 
-@router.delete("/{item_id}", description="删除单个", response_model=Resp[Domain])
+@router.delete("/{item_id}", summary="删除单个")
 async def delete_domain(item_id: int, session: SessionDep) -> Resp[Domain]:
     domain = session.get(Domain, item_id)
     if domain is None:
@@ -39,7 +39,7 @@ async def delete_domain(item_id: int, session: SessionDep) -> Resp[Domain]:
     return Resp.success(domain)
 
 
-@router.post("/", description="新增单个", response_model=Resp[Domain])
+@router.post("/", summary="新增单个")
 async def create_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
     domain = Domain(name=domain.name, code=domain.code, environment=domain.environment, domain=domain.domain)
     session.add(domain)
@@ -47,7 +47,7 @@ async def create_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
     return Resp.success(domain)
 
 
-@router.put("/", description="修改单个", response_model=Resp[Domain])
+@router.put("/", summary="修改单个")
 async def update_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
     db_domain = session.get(Domain, domain.id)
     if db_domain is None:

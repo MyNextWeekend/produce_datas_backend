@@ -18,18 +18,18 @@ logger = Log().get_logger()
 router = APIRouter(prefix="/endpoint", tags=["接口配置"])
 
 
-@router.get("/", description="查询所有", response_model=Resp[List[Endpoint]])
+@router.get("/", summary="查询所有")
 async def get_endpoints(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[Endpoint]]:
     statement = select(Endpoint).offset(skip).limit(limit)
     return Resp.success(session.exec(statement).all())
 
 
-@router.get("/{item_id}", description="查询单个", response_model=Resp[Endpoint])
+@router.get("/{item_id}", summary="查询单个")
 async def get_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
     return Resp.success(session.get(Endpoint, item_id))
 
 
-@router.delete("/{item_id}", description="删除单个", response_model=Resp[Endpoint])
+@router.delete("/{item_id}", summary="删除单个")
 async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
     endpoint = session.get(Endpoint, item_id)
     if endpoint is None:
@@ -39,7 +39,7 @@ async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
     return Resp.success(endpoint)
 
 
-@router.post("/", description="新增单个", response_model=Resp[Endpoint])
+@router.post("/", summary="新增单个")
 async def create_endpoint(endpoint: Endpoint, session: SessionDep) -> Resp[Endpoint]:
     endpoint = Endpoint(
         name=endpoint.name,
@@ -54,7 +54,7 @@ async def create_endpoint(endpoint: Endpoint, session: SessionDep) -> Resp[Endpo
     return Resp.success(endpoint)
 
 
-@router.put("/", description="修改单个", response_model=Resp[Endpoint])
+@router.put("/", summary="修改单个")
 async def update_endpoint(endpoint_new: Endpoint, session: SessionDep) -> Resp[Endpoint]:
     db_endpoint = session.get(Endpoint, endpoint_new.id)
     if db_endpoint is None:
