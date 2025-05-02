@@ -25,13 +25,13 @@ class Log:
 
     def __init__(self):
         # 如果已经初始化了就不再执行，避免重复添加handle
-        self.fmt_str = "%(asctime)s【%(levelname)s】-%(filename)s[%(lineno)d][%(trace_id)s]: %(message)s"
+        fmt_str = "%(asctime)s【%(levelname)s】-%(filename)s[%(lineno)d][%(trace_id)s]: %(message)s"
+        self.fmt = logging.Formatter(fmt_str)
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.DEBUG)
         # 添加handle
         self.logger.addHandler(self.console_handle())
         self.logger.addHandler(self.file_handle())
-        self.logger.addFilter(TraceIdFilter())
         self.modify_logger(["uvicorn.access", "uvicorn.error"])
 
     def modify_logger(self, names: list[str]):
@@ -39,29 +39,26 @@ class Log:
         将其他logger的输出重定向
         :param names: 名称
         """
-        logger_list = []
         for name in names:
-            logger_list.append(logging.getLogger(name))
-        for logger in logger_list:
+            logger = logging.getLogger(name)
             logger.handlers.clear()
             logger.addHandler(self.console_handle())
             logger.addHandler(self.file_handle())
-            logger.addFilter(TraceIdFilter())
 
     def file_handle(self) -> logging.Handler:
         """日志文件的handle"""
         file_handle = TimedRotatingFileHandler(settings.log_file, when='midnight', backupCount=5, encoding='utf-8')
         file_handle.setLevel(logging.INFO)
-        fmt = logging.Formatter(self.fmt_str)
-        file_handle.setFormatter(fmt)
+        file_handle.setFormatter(self.fmt)
+        file_handle.addFilter(TraceIdFilter())
         return file_handle
 
     def console_handle(self) -> logging.Handler:
         """控制台日志的handle"""
         console_handle = logging.StreamHandler()
         console_handle.setLevel(logging.DEBUG)
-        fmt = logging.Formatter(self.fmt_str)
-        console_handle.setFormatter(fmt)
+        console_handle.setFormatter(self.fmt)
+        console_handle.addFilter(TraceIdFilter())
         return console_handle
 
     def get_logger(self) -> logging.Logger:
