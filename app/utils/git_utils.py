@@ -33,13 +33,16 @@ class GitUtil:
             path = https_match.group(1)
             return Path(path).name
 
+    def clone_or_pull(self):
+        if self.repo_dir.is_dir():
+            logger.info(f"目标目录已存在，从远程拉取最新数据: {self.repo_dir}")
+            self.pull()
+        else:
+            logger.info(f"目标目录不存在，从远程 clone 仓库: {self.repo_dir}")
+            self.clone()
+
     def clone(self):
         """克隆指定的 Git 仓库到给定目录"""
-        if self.repo_dir.is_dir():
-            logger.warning(f"目标目录已存在: {self.repo_dir} 改为从远程拉取最新数据")
-            self.pull()
-            return None
-            # raise RuntimeError(f"目标目录已存在: {self.repo_dir}")
         if self.git_url is None:
             logger.error("远程 url 为空")
             raise RuntimeError("远程 url 为空")
@@ -69,9 +72,13 @@ class GitUtil:
         repo = git.Repo(self.repo_dir)
         return [branch.name for branch in repo.branches]
 
+    def get_local_repo_hash(self):
+        """获取本地仓库最后一个 commit 的 hash"""
+        repo = git.Repo(self.repo_dir)
+        return repo.head.commit.hexsha
+
 
 if __name__ == "__main__":
-    local_dir = "/Users/weekend/workSpaces/pycharmProjects/fastapi_project/aaa"
     # 如果配置了 ssh 密钥认证
     remote_url = "git@github.com:MyNextWeekend/fastapi_project.git"
     # 也可以执行提供账号密码(不安全不推荐)
@@ -81,7 +88,9 @@ if __name__ == "__main__":
     # remote_url = f"https://{token}@github.com/MyNextWeekend/fastapi_project.git"
 
     git_obj = GitUtil(remote_url)
-    print(git_obj.repo_dir)
+    git_obj.clone_or_pull()
+    print(git_obj.get_local_repo_hash())
+    # print(git_obj.repo_dir)
     # git_obj.clone()
     # print(git_obj.get_repo_name())
     # print(git_obj.list_branches())
