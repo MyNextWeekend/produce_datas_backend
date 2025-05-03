@@ -37,7 +37,7 @@ def register_exception_handle(server: FastAPI):
 
     @server.exception_handler(BusinessException)
     async def http_business_exception_handler(_: Request, exc: BusinessException):
-        logger.error(traceback.format_exc())  # 记录异常堆栈
+        logger.warning(traceback.format_exc())  # 记录异常堆栈,自定义异常使用 warning 级别
         return JSONResponse(status_code=200, content=Resp(code=exc.code, message=exc.message).model_dump())
 
     @server.exception_handler(Exception)
