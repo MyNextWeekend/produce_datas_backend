@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app.exception import register_exception_handle
 from app.middleware import register_middleware_handle
-from app.routers import domain, endpoint, hello, parameter, repository
+from app.routers import domain, endpoint, hello, parameter, repository, task
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()
@@ -36,6 +36,7 @@ app.include_router(domain.router)
 app.include_router(endpoint.router)
 app.include_router(parameter.router)
 app.include_router(repository.router)
+app.include_router(task.router)
 
 # 手动启动命令
 # uv run uvicorn app.main:app --host 0.0.0.0 --port 8080

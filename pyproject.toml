@@ -18,7 +18,7 @@ readme = "README.md"
 requires-python = ">= 3.8"
 
 [tool.pytest.ini_options]
-pythonpath = ["app"]
+pythonpath = "app"
 
 [dependency-groups]
 dev = [
