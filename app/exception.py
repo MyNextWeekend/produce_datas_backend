@@ -16,14 +16,14 @@ class ErrorEnum(Enum):
     NOT_FOUND = (404, "请求的资源不存在")
     INTERNAL_SERVER_ERROR = (500, "服务器内部出现异常")
 
-    def __init__(self, status_code: int, message: str):
-        self.status_code = status_code
+    def __init__(self, code: int, message: str):
+        self.code = code
         self.message = message
 
 
 class BusinessException(Exception):
     def __init__(self, error: ErrorEnum):
-        self.code = error.status_code
+        self.code = error.code
         self.message = error.message
 
 
