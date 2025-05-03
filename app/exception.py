@@ -1,3 +1,4 @@
+import traceback
 from enum import Enum
 
 from fastapi import FastAPI, Request
@@ -22,9 +23,13 @@ class ErrorEnum(Enum):
 
 
 class BusinessException(Exception):
-    def __init__(self, error: ErrorEnum):
-        self.code = error.code
-        self.message = error.message
+    def __init__(self, code: int, message: str):
+        self.code = code
+        self.message = message
+
+    @classmethod
+    def new(cls, error: ErrorEnum):
+        return BusinessException(error.code, error.message)
 
 
 def register_exception_handle(server: FastAPI):
@@ -32,16 +37,11 @@ def register_exception_handle(server: FastAPI):
 
     @server.exception_handler(BusinessException)
     async def http_business_exception_handler(_: Request, exc: BusinessException):
-        return JSONResponse(
-            status_code=200,
-            content=Resp(code=exc.code, message=exc.message).model_dump()
-        )
+        logger.error(traceback.format_exc())  # 记录异常堆栈
+        return JSONResponse(status_code=200, content=Resp(code=exc.code, message=exc.message).model_dump())
 
     @server.exception_handler(Exception)
     async def http_exception_handler(_request: Request, _exc: Exception):
-        return JSONResponse(
-            status_code=500,
-            content=Resp(message="服务内部异常").model_dump()
-        )
+        return JSONResponse(status_code=500, content=Resp(message="服务内部异常").model_dump())
 
     logger.info("register exception handle successfully.")
