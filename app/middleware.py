@@ -3,6 +3,7 @@ import uuid
 
 from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
 from app.utils.log_utils import Log, trace_id
@@ -38,6 +39,11 @@ class TraceIDMiddleware(BaseHTTPMiddleware):
 
 def register_middleware_handle(server: FastAPI):
     logger.info("register middleware handle...")
+    server.add_middleware(CORSMiddleware,
+                          allow_origins=["*"],
+                          allow_credentials=True,
+                          allow_methods=["*"],
+                          allow_headers=["*"], )
     # 添加 trace_id 中间件
     server.add_middleware(TraceIDMiddleware)
     # 添加耗时请求中间件

@@ -119,4 +119,10 @@ CREATE TABLE report_detail
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) COMMENT '存储用例执行产生的日志或截图信息';
 
-
+CREATE TABLE user
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username   VARCHAR(50) NOT NULL COMMENT '账号',
+    password   VARCHAR(50) NOT NULL COMMENT '密码',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+) COMMENT '用户信息';
