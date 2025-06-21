@@ -11,11 +11,11 @@ logger = Log().get_logger()
 
 
 class ErrorEnum(Enum):
-    BAD_REQUEST = (400, "请求参数错误或不符合要求")
-    UNAUTHORIZED = (401, "需要用户认证或认证已失效")
-    FORBIDDEN = (403, "没有访问该资源的权限")
-    NOT_FOUND = (404, "请求的资源不存在")
-    INTERNAL_SERVER_ERROR = (500, "服务器内部出现异常")
+    BAD_REQUEST = (901, "请求参数错误或不符合要求")
+    UNAUTHORIZED = (902, "需要用户认证或认证已失效")
+    FORBIDDEN = (903, "没有访问该资源的权限")
+    NOT_FOUND = (904, "请求的资源不存在")
+    INTERNAL_SERVER_ERROR = (905, "服务器内部出现异常")
 
     def __init__(self, code: int, message: str):
         self.code = code

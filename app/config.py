@@ -1,4 +1,5 @@
 from pathlib import Path, PosixPath
+from typing import Optional
 
 from pydantic import PostgresDsn, computed_field
 from pydantic_core import MultiHostUrl
@@ -49,7 +50,7 @@ class Settings(BaseSettings):
     # redis配置
     redis_host: str
     redis_port: int
-    redis_password: str
+    redis_password: Optional[str] = None
 
 
 settings = Settings()
