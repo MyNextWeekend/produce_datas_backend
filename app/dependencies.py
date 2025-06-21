@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from enum import Enum
 from typing import Annotated
 
 from fastapi import Depends, Header, HTTPException, status
@@ -27,6 +28,10 @@ HeaderDep = Annotated[str | None, Header()]
 
 
 def get_user_by_token(token: HeaderDep, session: SessionDep) -> User:
+    """
+    校验 请求头 header 中的 token
+    并且从数据库获取 用户信息
+    """
     if token is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
 
@@ -45,3 +50,30 @@ def get_user_by_token(token: HeaderDep, session: SessionDep) -> User:
 
 
 UserDep = Annotated[User, Depends(get_user_by_token)]
+
+
+class Role(str, Enum):
+    ADMIN = "admin"
+    USER = "user"
+    GUEST = "guest"
+
+
+def require_role(required_role: Role):
+    """
+    管理 api 特定权限的用户访问
+    """
+
+    def role_checker(user: UserDep):
+        if user["role"] != required_role.value:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Permission denied for role: {user['role']}",
+            )
+        return user
+
+    return role_checker
+
+
+AdminRoleDep = Annotated[User, Depends(require_role(Role.ADMIN))]
+UserRoleDep = Annotated[User, Depends(require_role(Role.USER))]
+GuestRoleDep = Annotated[User, Depends(require_role(Role.GUEST))]
