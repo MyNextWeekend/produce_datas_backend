@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
+from app.config import settings
 from app.exception import register_exception_handle
 from app.middleware import register_middleware_handle
 from app.utils.log_utils import Log
@@ -48,7 +49,7 @@ def register_routers(server: FastAPI, routers_path: Path):
             continue
 
         # 构造模块名，例如 'routers.user'
-        relative_path = file.relative_to(routers_path.parent)
+        relative_path = file.relative_to(settings.root_dir)
         module_name = ".".join(relative_path.with_suffix("").parts)
 
         try:
@@ -64,7 +65,7 @@ def register_routers(server: FastAPI, routers_path: Path):
 
 
 # 自动注册路由
-register_routers(app, Path(__file__).parent.joinpath("routers"))
+register_routers(app, settings.root_dir.joinpath("app", "routers"))
 
 # 手动启动命令
 # uv run uvicorn app.main:app --host 0.0.0.0 --port 8080
