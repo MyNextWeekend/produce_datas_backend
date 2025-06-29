@@ -28,13 +28,13 @@ async def get_repository(item_id: int, session: SessionDep) -> Resp[Repository]:
     return Resp.success(session.get(Repository, item_id))
 
 
-@router.get("/{item_id}/clone", summary="克隆仓库")
-async def clone_repository(item_id: int, session: SessionDep) -> Resp[Repository]:
-    repository = session.get(Repository, item_id)
-    if not repository:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
-    # TODO clone仓库到本地，然后数据库新增一条数据
-    return Resp.success(data=)
+# @router.get("/{item_id}/clone", summary="克隆仓库")
+# async def clone_repository(item_id: int, session: SessionDep) -> Resp[Repository]:
+#     repository = session.get(Repository, item_id)
+#     if not repository:
+#         raise BusinessException(ErrorEnum.NOT_FOUND)
+#     # TODO clone仓库到本地，然后数据库新增一条数据
+#     return Resp.success(data=)
 
 
 @router.delete("/{item_id}", summary="删除单个")
