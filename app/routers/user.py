@@ -12,6 +12,7 @@ from app.schemes.user_scheme import UserLogin
 from app.utils.encrypt_utils import verify_password
 from app.utils.log_utils import Log
 from app.utils.redis_utils import RedisClient
+from app.utils.snow_utils import snowflake_generator
 
 logger = Log().get_logger()
 
@@ -26,14 +27,14 @@ async def login(user: UserLogin, session: SessionDep) -> Resp[dict[str, str]]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
     if not verify_password(str(user.password), str(db_user.password)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
-    token = "admin-token"
+    token = f"token_{snowflake_generator.generate_id()}"
     RedisClient().set(token, str(db_user.id), 30 * 60)
     return Resp.success({"token": token})
 
 
 @router.post("/info", summary="查询权限")
-async def get_info(_user: UserDep) -> Resp[dict[str, str]]:
-    return Resp.success({"roles": "admin", "name": "王三岁", "avatar": "", "introduction": ""})
+async def get_info(user: UserDep) -> Resp[dict[str, str]]:
+    return Resp.success({"roles": "admin", "name": user.username, "avatar": "", "introduction": ""})
 
 
 @router.post("/logout", summary="退出")
