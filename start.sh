@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APP_NAME="uvicorn"
+APP_NAME="uv run uvicorn"
 APP_MODULE="app.main:app"
 PID_FILE="fastapi_app.pid"
 
@@ -9,7 +9,7 @@ start() {
         echo "$APP_NAME is already running."
     else
         echo "Starting $APP_NAME..."
-        nohup $APP_NAME $APP_MODULE > /dev/null 2>&1 &
+        nohup $APP_NAME $APP_MODULE --host 0.0.0.0 --port 8080 > /dev/null 2>&1 &
         echo $! > "$PID_FILE"
         echo "$APP_NAME started."
     fi
