@@ -9,12 +9,8 @@ logger = Log().get_logger()
 
 
 class RedisClient:
-    def __init__(self, db: int = 0):
-        self.client = redis.Redis(host=settings.redis_host,
-                                  port=settings.redis_port,
-                                  password=settings.redis_password,
-                                  db=db,
-                                  decode_responses=True)
+    def __init__(self):
+        self.client = redis.from_url(settings.redis.uri)
 
     def set(self, key: str, value: Union[str, int, float], ex_seconds: Optional[int] = None) -> bool:
         """设置键值对，可选过期时间（秒）"""

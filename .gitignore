@@ -10,4 +10,4 @@ wheels/
 .venv
 logs
 .idea
-
+sqlite.db
