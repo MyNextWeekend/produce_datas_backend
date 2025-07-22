@@ -122,7 +122,13 @@ CREATE TABLE report_detail
 CREATE TABLE user
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username   VARCHAR(50) NOT NULL COMMENT '账号',
-    password   VARCHAR(50) NOT NULL COMMENT '密码',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-) COMMENT '用户信息';
+    username   VARCHAR(64) NOT NULL COMMENT '账号',
+    password   VARCHAR(128) NOT NULL COMMENT '密码',
+    salt       VARCHAR(32) COMMENT '加盐值',
+    role       INT         NOT NULL COMMENT '角色',
+    created_at DATETIME  DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '用户信息';
+
