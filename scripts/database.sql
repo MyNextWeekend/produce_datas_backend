@@ -12,7 +12,8 @@ CREATE TABLE if not exists endpoint
     updated_at  TIMESTAMP         DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY code_unique (code) COMMENT 'code唯一约束'
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='接口基本信息表';
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci  COMMENT ='接口基本信息表';
 
 CREATE TABLE if not exists domain
 (
@@ -26,7 +27,8 @@ CREATE TABLE if not exists domain
     updated_at  TIMESTAMP         DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY code_environment_unique (code, environment) COMMENT 'code和环境唯一约束'
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='接口域名表';
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci  COMMENT ='接口域名表';
 
 CREATE TABLE database_info
 (
@@ -41,7 +43,9 @@ CREATE TABLE database_info
     description TEXT COMMENT '描述',
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '数据库相关信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '数据库相关信息';
 
 CREATE TABLE custom_parameter
 (
@@ -51,7 +55,9 @@ CREATE TABLE custom_parameter
     description TEXT COMMENT '参数描述',
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放自定义参数信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放自定义参数信息';
 
 CREATE TABLE repository
 (
@@ -62,7 +68,9 @@ CREATE TABLE repository
     description TEXT COMMENT '描述',
     created_at  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放 Git 仓库地址';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放 Git 仓库地址';
 
 CREATE TABLE repository_detail
 (
@@ -76,7 +84,9 @@ CREATE TABLE repository_detail
     description   TEXT COMMENT '描述',
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放 Git 仓库地址';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放 Git 仓库地址';
 
 CREATE TABLE task
 (
@@ -88,7 +98,9 @@ CREATE TABLE task
     description     TEXT COMMENT '描述',
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放任务信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放任务信息';
 
 CREATE TABLE schedule
 (
@@ -98,7 +110,9 @@ CREATE TABLE schedule
     enabled         BOOLEAN  DEFAULT TRUE COMMENT '是否启用',
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放任务的定时信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放任务的定时信息';
 
 CREATE TABLE report
 (
@@ -108,7 +122,9 @@ CREATE TABLE report
     status     int(4) NOT NULL COMMENT '执行状态',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '执行时间',
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) COMMENT '存放测试报告信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存放测试报告信息';
 
 CREATE TABLE report_detail
 (
@@ -117,7 +133,9 @@ CREATE TABLE report_detail
     content_type VARCHAR(50) NOT NULL COMMENT '内容类型（如日志、截图）',
     content      MEDIUMBLOB COMMENT '内容数据（如日志文本、截图文件）',
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-) COMMENT '存储用例执行产生的日志或截图信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT '存储用例执行产生的日志或截图信息';
 
 CREATE TABLE user
 (
