@@ -1,3 +1,5 @@
+use first;
+
 CREATE TABLE if not exists endpoint
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
