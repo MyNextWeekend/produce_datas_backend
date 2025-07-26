@@ -10,7 +10,7 @@ from app.config import settings
 from app.models.first_model import User
 from app.utils.redis_utils import RedisClient
 
-engine = create_engine(str(settings.sqlite_uri), echo=True, pool_size=8, pool_recycle=60 * 30)
+engine = create_engine(str(settings.mysql.uri), echo=True, pool_size=8, pool_recycle=60 * 30)
 
 
 def get_session() -> Generator[Session, None, None]:
