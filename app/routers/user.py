@@ -23,6 +23,7 @@ router = APIRouter(prefix="/user", tags=["用户"])
 async def login(user: UserLogin, session: SessionDep) -> Resp[dict[str, str]]:
     statement = select(User).where(User.username == user.username)
     db_user = session.exec(statement).first()
+    logger.info(f"查询用户的结果:{db_user}")
     if not db_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
     if not verify_password(str(user.password), str(db_user.password)):
