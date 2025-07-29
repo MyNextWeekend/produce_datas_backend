@@ -8,7 +8,7 @@ from sqlmodel import select
 from app.dependencies import HeaderDep, SessionDep, UserDep
 from app.models.first_model import User
 from app.models.resp import Resp
-from app.schemes.user_scheme import UserLogin
+from app.schemas.user_schema import UserLogin
 from app.utils.encrypt_utils import verify_password
 from app.utils.log_utils import Log
 from app.utils.redis_utils import RedisClient

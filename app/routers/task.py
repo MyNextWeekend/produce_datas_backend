@@ -12,7 +12,7 @@ from app.dependencies import SessionDep
 from app.exception import BusinessException, ErrorEnum
 from app.models.first_model import Task
 from app.models.resp import Resp
-from app.schemes.task_scheme import CaseInfo
+from app.schemas.task_schema import CaseInfo
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()

@@ -8,3 +8,10 @@ def test_log():
     logger.warning("test")
     logger.error("test")
     logger.critical("test")
+
+
+def test_log2():
+    logger = Log().get_logger()
+    logger.info("test111")
+    logger.debug("test222")
+    logger.warning("test333")
