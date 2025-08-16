@@ -40,4 +40,7 @@ async def get_info(user: UserDep) -> Resp[dict[str, str]]:
 
 @router.post("/logout", summary="退出")
 async def delete_domain(token: HeaderDep, _user: UserDep) -> Resp[bool]:
+    if token is None:
+        return Resp.success(True)
     return Resp.success(bool(RedisClient().delete(token)))
+

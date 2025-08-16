@@ -33,7 +33,7 @@ async def get_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
 async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
     endpoint = session.get(Endpoint, item_id)
     if endpoint is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     session.delete(endpoint)
     session.commit()
     return Resp.success(endpoint)
@@ -58,7 +58,7 @@ async def create_endpoint(endpoint: Endpoint, session: SessionDep) -> Resp[Endpo
 async def update_endpoint(endpoint_new: Endpoint, session: SessionDep) -> Resp[Endpoint]:
     db_endpoint = session.get(Endpoint, endpoint_new.id)
     if db_endpoint is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     endpoint_dic = endpoint_new.model_dump(exclude_unset=True)
     db_endpoint.sqlmodel_update(endpoint_dic)
     session.add(db_endpoint)

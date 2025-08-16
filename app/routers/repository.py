@@ -8,7 +8,7 @@ from sqlmodel import select
 
 from app.dependencies import SessionDep
 from app.exception import BusinessException, ErrorEnum
-from app.models.first_model import Repository, RepositoryDetail
+from app.models.first_model import Repository
 from app.models.resp import Resp
 from app.utils.log_utils import Log
 
@@ -41,7 +41,7 @@ async def get_repository(item_id: int, session: SessionDep) -> Resp[Repository]:
 async def delete_repository(item_id: int, session: SessionDep) -> Resp[Repository]:
     repository = session.get(Repository, item_id)
     if Repository is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     session.delete(repository)
     session.commit()
     return Resp.success(repository)
@@ -59,9 +59,9 @@ async def create_repository(repository: Repository, session: SessionDep) -> Resp
 async def update_repository(repository: Repository, session: SessionDep) -> Resp[Repository]:
     db_repository = session.get(Repository, repository.id)
     if db_repository is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
-    repository = repository.model_dump(exclude_unset=True)
-    db_repository.sqlmodel_update(repository)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
+    repository_json = repository.model_dump(exclude_unset=True)
+    db_repository.sqlmodel_update(repository_json)
     session.add(db_repository)
     session.commit()
     session.refresh(db_repository)

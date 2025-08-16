@@ -33,7 +33,7 @@ async def get_domain(item_id: int, session: SessionDep) -> Resp[Domain]:
 async def delete_domain(item_id: int, session: SessionDep) -> Resp[Domain]:
     domain = session.get(Domain, item_id)
     if domain is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     session.delete(domain)
     session.commit()
     return Resp.success(domain)
@@ -51,7 +51,7 @@ async def create_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
 async def update_domain(domain: Domain, session: SessionDep) -> Resp[Domain]:
     db_domain = session.get(Domain, domain.id)
     if db_domain is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     domain_dic = domain.model_dump(exclude_unset=True)
     db_domain.sqlmodel_update(domain_dic)
     session.add(db_domain)

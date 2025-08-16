@@ -33,7 +33,7 @@ async def get_parameter(item_id: int, session: SessionDep) -> Resp[CustomParamet
 async def delete_parameter(item_id: int, session: SessionDep) -> Resp[CustomParameter]:
     custom_parameter = session.get(CustomParameter, item_id)
     if CustomParameter is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     session.delete(custom_parameter)
     session.commit()
     return Resp.success(custom_parameter)
@@ -51,7 +51,7 @@ async def create_parameter(custom_parameter: CustomParameter, session: SessionDe
 async def update_parameter(custom_parameter: CustomParameter, session: SessionDep) -> Resp[CustomParameter]:
     db_custom_parameter = session.get(CustomParameter, custom_parameter.id)
     if db_custom_parameter is None:
-        raise BusinessException(ErrorEnum.NOT_FOUND)
+        raise BusinessException.new(ErrorEnum.NOT_FOUND)
     custom_parameter_dic = custom_parameter.model_dump(exclude_unset=True)
     db_custom_parameter.sqlmodel_update(custom_parameter_dic)
     session.add(db_custom_parameter)
