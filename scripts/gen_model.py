@@ -1,8 +1,8 @@
 from sqlacodegen.generators import SQLModelGenerator
 from sqlalchemy import MetaData
 
-from app.config import settings
-from app.dependencies import engine
+from app.core.config import settings
+from app.core.dependencies import engine
 
 
 def get_table_info():
