@@ -11,10 +11,7 @@ from app.core.config import settings
 from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum, Resp
 from app.models.first_model import Task
-from app.utils.log_utils import Log
 from app.vo.task_vo import CaseInfo
-
-logger = Log().get_logger()
 
 router = APIRouter(prefix="/task", tags=["任务操作"])
 

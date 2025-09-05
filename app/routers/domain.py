@@ -10,9 +10,6 @@ from sqlmodel import select
 from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum, Resp
 from app.models.first_model import Domain
-from app.utils.log_utils import Log
-
-logger = Log().get_logger()
 
 router = APIRouter(prefix="/domain", tags=["域名环境"])
 

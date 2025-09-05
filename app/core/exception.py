@@ -6,9 +6,8 @@ from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
-from app.utils.log_utils import Log
+from app.utils.log_utils import logger
 
-logger = Log().get_logger()
 T = TypeVar("T")
 
 

@@ -3,7 +3,6 @@ from contextvars import ContextVar
 from logging.handlers import TimedRotatingFileHandler
 
 from app.core.config import settings
-from app.utils.wrapper_utils import singleton
 
 # 声明上下文变量
 trace_id: ContextVar[str] = ContextVar("trace_id", default="-")
@@ -20,8 +19,7 @@ class TraceIdFilter(logging.Filter):
         return True
 
 
-@singleton
-class Log:
+class _Log:
 
     def __init__(self):
         # 如果已经初始化了就不再执行，避免重复添加handle
@@ -40,10 +38,10 @@ class Log:
         :param names: 名称
         """
         for name in names:
-            logger = logging.getLogger(name)
-            logger.handlers.clear()
-            logger.addHandler(self.console_handle())
-            logger.addHandler(self.file_handle())
+            log = logging.getLogger(name)
+            log.handlers.clear()
+            log.addHandler(self.console_handle())
+            log.addHandler(self.file_handle())
 
     def file_handle(self) -> logging.Handler:
         """日志文件的handle"""
@@ -63,3 +61,6 @@ class Log:
 
     def get_logger(self) -> logging.Logger:
         return self.logger
+
+
+logger = _Log().get_logger()

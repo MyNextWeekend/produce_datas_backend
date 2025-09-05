@@ -10,11 +10,8 @@ from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum, Resp
 from app.dao.endpoint import EndpointDao
 from app.models.first_model import Endpoint
-from app.utils.log_utils import Log
 from app.vo import Query
 from app.vo.endpoint_vo import SearchVo
-
-logger = Log().get_logger()
 
 router = APIRouter(tags=["接口配置"])
 

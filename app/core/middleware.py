@@ -6,9 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 
-from app.utils.log_utils import Log, trace_id
-
-logger = Log().get_logger()
+from app.utils.log_utils import logger, trace_id
 
 
 class UseTimeMiddleware(BaseHTTPMiddleware):

@@ -3,9 +3,7 @@ import asyncio
 from fastapi import APIRouter
 
 from app.core.exception import Resp
-from app.utils.log_utils import Log
-
-logger = Log().get_logger()
+from app.utils.log_utils import logger
 
 router = APIRouter(prefix="/hello", tags=["测试"])
 

@@ -9,12 +9,10 @@ from app.core.dependencies import HeaderDep, SessionDep, UserDep
 from app.core.exception import Resp
 from app.models.first_model import User
 from app.utils.encrypt_utils import verify_password
-from app.utils.log_utils import Log
+from app.utils.log_utils import logger
 from app.utils.redis_utils import RedisClient
 from app.utils.snow_utils import snowflake_generator
 from app.vo.user_vo import UserLogin
-
-logger = Log().get_logger()
 
 router = APIRouter(prefix="/user", tags=["用户"])
 

@@ -1,9 +1,7 @@
-
 from passlib.context import CryptContext
 
-from app.utils.log_utils import Log
+from app.utils.log_utils import logger
 
-logger = Log().get_logger()
 # 创建一个 CryptContext 对象
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
