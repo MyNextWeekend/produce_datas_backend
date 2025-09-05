@@ -52,7 +52,7 @@ class LogSettings(BaseSettings):
 
 class Settings(BaseSettings):
     # 项目的根目录
-    root_dir: PosixPath = Path(__file__).resolve().parent.parent
+    root_dir: PosixPath = Path(__file__).resolve().parent.parent.parent
     local_repository: PosixPath = root_dir / 'local_repository'
 
     mysql: MysqlSettings
