@@ -5,22 +5,24 @@
 from typing import List
 
 from fastapi import APIRouter
-from sqlmodel import select
 
 from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum, Resp
+from app.dao.endpoint import EndpointDao
 from app.models.first_model import Endpoint
 from app.utils.log_utils import Log
+from app.vo import Query
+from app.vo.endpoint_vo import SearchVo
 
 logger = Log().get_logger()
 
-router = APIRouter(prefix="/endpoint", tags=["接口配置"])
+router = APIRouter(tags=["接口配置"])
 
 
-@router.get("/", summary="查询所有")
-async def get_endpoints(session: SessionDep, skip: int = 0, limit: int = 100) -> Resp[List[Endpoint]]:
-    statement = select(Endpoint).offset(skip).limit(limit)
-    return Resp.success(session.exec(statement).all())
+@router.post("/endpoint/query", summary="查询所有")
+async def get_endpoints(session: SessionDep, query: Query[SearchVo]) -> Resp[List[Endpoint]]:
+    result = EndpointDao.query(session, query)
+    return Resp.success(result)
 
 
 @router.get("/{item_id}", summary="查询单个")
