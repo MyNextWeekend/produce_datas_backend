@@ -5,9 +5,9 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlmodel import select
 
-from app.dependencies import HeaderDep, SessionDep, UserDep
+from app.core.dependencies import HeaderDep, SessionDep, UserDep
+from app.core.exception import Resp
 from app.models.first_model import User
-from app.models.resp import Resp
 from app.schemas.user_schema import UserLogin
 from app.utils.encrypt_utils import verify_password
 from app.utils.log_utils import Log
@@ -43,4 +43,3 @@ async def delete_domain(token: HeaderDep, _user: UserDep) -> Resp[bool]:
     if token is None:
         return Resp.success(True)
     return Resp.success(bool(RedisClient().delete(token)))
-

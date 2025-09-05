@@ -2,7 +2,7 @@ import logging
 from contextvars import ContextVar
 from logging.handlers import TimedRotatingFileHandler
 
-from app.config import settings
+from app.core.config import settings
 from app.utils.wrapper_utils import singleton
 
 # 声明上下文变量

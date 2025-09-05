@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Union
 
 import redis
 
-from app.config import settings
+from app.core.config import settings
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()

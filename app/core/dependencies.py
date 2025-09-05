@@ -6,7 +6,7 @@ from fastapi import Depends, Header, HTTPException, status
 from sqlalchemy import create_engine
 from sqlmodel import Session, select
 
-from app.config import settings
+from app.core.config import settings
 from app.models.first_model import User
 from app.utils.redis_utils import RedisClient
 

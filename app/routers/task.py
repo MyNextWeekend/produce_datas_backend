@@ -7,11 +7,10 @@ import pytest
 from fastapi import APIRouter
 from sqlmodel import select
 
-from app.config import settings
-from app.dependencies import SessionDep
-from app.exception import BusinessException, ErrorEnum
+from app.core.config import settings
+from app.core.dependencies import SessionDep
+from app.core.exception import BusinessException, ErrorEnum, Resp
 from app.models.first_model import Task
-from app.models.resp import Resp
 from app.schemas.task_schema import CaseInfo
 from app.utils.log_utils import Log
 

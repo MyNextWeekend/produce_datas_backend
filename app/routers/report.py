@@ -7,9 +7,9 @@ from typing import List
 from fastapi import APIRouter
 from sqlmodel import select
 
-from app.dependencies import SessionDep
+from app.core.dependencies import SessionDep
+from app.core.exception import Resp
 from app.models.first_model import Report
-from app.models.resp import Resp
 from app.utils.log_utils import Log
 
 logger = Log().get_logger()
