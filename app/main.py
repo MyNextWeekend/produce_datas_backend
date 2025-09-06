@@ -6,9 +6,7 @@ from app.core.config import settings
 from app.core.exception import register_exception_handle
 from app.core.middleware import register_middleware_handle
 from app.routers import register_routers
-from app.utils.log_utils import Log
-
-logger = Log().get_logger()
+from app.utils.log_utils import logger
 
 
 @asynccontextmanager
@@ -30,7 +28,7 @@ register_exception_handle(app)  # 注册自定义异常
 register_routers(app, settings.root_dir.joinpath("app", "routers"))  # 注册路由
 
 # 手动启动命令
-# uv run uvicorn app.main:app --host 0.0.0.0 --port 8080
+# uv run uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
 if __name__ == '__main__':
     import uvicorn
 

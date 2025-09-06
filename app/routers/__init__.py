@@ -4,9 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI
 
 from app.core.config import settings
-from app.utils.log_utils import Log
-
-logger = Log().get_logger()
+from app.utils.log_utils import logger
 
 
 def register_routers(server: FastAPI, routers_path: Path):
@@ -32,7 +30,7 @@ def register_routers(server: FastAPI, routers_path: Path):
             module = importlib.import_module(module_name)
             # 检查并注册 router 对象
             if hasattr(module, "router"):
-                server.include_router(module.router)
+                server.include_router(module.router, prefix=settings.prefix)
                 logger.info(f"register router from {module_name} successfully")
             else:
                 logger.warning(f"not found router from {module_name}, skip...")
