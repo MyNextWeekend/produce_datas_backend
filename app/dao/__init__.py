@@ -36,7 +36,7 @@ class Dao(Generic[T]):
                 stmt = stmt.order_by(asc(parm.sort_by))
         return self.session.exec(stmt).all()
 
-    def update_by_id(self, parm: E, commit: bool = True) -> Optional[T]:
+    def update_by_id(self, parm: E, commit: bool = True) -> bool:
         table_id = parm.id
         if not table_id:
             raise ValueError("table_id is required")
