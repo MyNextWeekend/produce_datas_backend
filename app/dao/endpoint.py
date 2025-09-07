@@ -2,31 +2,34 @@ from typing import List
 
 from sqlmodel import Session, select
 
+from app.dao import Dao
 from app.models.first_model import Endpoint
-from app.vo import Query
+from app.vo import PageReq
 from app.vo.endpoint_vo import SearchVo
 
 
-class EndpointDao:
+class EndpointDao(Dao[Endpoint]):
 
-    @classmethod
-    def query(cls, session: Session, query: Query[SearchVo]) -> List[Endpoint]:
+    def __init__(self, session: Session):
+        super().__init__(session, Endpoint)
+
+    def list(self, session: Session, parm: PageReq[SearchVo]) -> List[Endpoint]:
         stmt = select(Endpoint)
-        if query.data is not None:
-            if query.data.id is not None:
-                stmt = stmt.where(Endpoint.id == query.data.id)
-            if query.data.name is not None:
-                stmt = stmt.where(Endpoint.name == query.data.name)
-            if query.data.code is not None:
-                stmt = stmt.where(Endpoint.code == query.data.code)
-            if query.data.method is not None:
-                stmt = stmt.where(Endpoint.method == query.data.method)
-            if query.data.domain_code is not None:
-                stmt = stmt.where(Endpoint.domain_code == query.data.domain_code)
-            if query.data.path is not None:
-                stmt = stmt.where(Endpoint.path == query.data.path)
-            if query.data.description is not None:
-                stmt = stmt.where(Endpoint.description == query.data.description)
-            if query.data.is_active is not None:
-                stmt = stmt.where(Endpoint.is_active == query.data.is_active)
-        return session.exec(stmt.offset((query.page - 1) * query.page_size).limit(query.page_size)).all()
+        if parm.filter is not None:
+            if parm.filter.id is not None:
+                stmt = stmt.where(Endpoint.id == parm.filter.id)
+            if parm.filter.name is not None:
+                stmt = stmt.where(Endpoint.name == parm.filter.name)
+            if parm.filter.code is not None:
+                stmt = stmt.where(Endpoint.code == parm.filter.code)
+            if parm.filter.method is not None:
+                stmt = stmt.where(Endpoint.method == parm.filter.method)
+            if parm.filter.domain_code is not None:
+                stmt = stmt.where(Endpoint.domain_code == parm.filter.domain_code)
+            if parm.filter.path is not None:
+                stmt = stmt.where(Endpoint.path == parm.filter.path)
+            if parm.filter.description is not None:
+                stmt = stmt.where(Endpoint.description == parm.filter.description)
+            if parm.filter.is_active is not None:
+                stmt = stmt.where(Endpoint.is_active == parm.filter.is_active)
+        return session.exec(stmt.offset((parm.page - 1) * parm.page_size).limit(parm.page_size)).all()

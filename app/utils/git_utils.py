@@ -3,10 +3,8 @@ from pathlib import Path
 
 import git
 
-from app.config import settings
-from app.utils.log_utils import Log
-
-logger = Log().get_logger()
+from app.core.config import settings
+from app.utils.log_utils import logger
 
 
 class GitUtil:
