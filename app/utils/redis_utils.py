@@ -1,3 +1,5 @@
+import time
+import uuid
 from typing import Dict, List, Optional, Union
 
 import redis
@@ -71,9 +73,47 @@ class RedisClient:
         self.client.close()
 
 
+class RedisLock:
+    def __init__(self, client: redis.Redis, lock_key: str, expire: int = 10):
+        self.client = client
+        self.lock_key = lock_key
+        self.expire = expire
+        self.lock_value = str(uuid.uuid4())  # 用唯一值标识这个客户端持有的锁
+
+    def acquire(self, timeout: int = None) -> bool:
+        start_time = time.time()
+        while True:
+            # 尝试获取锁
+            if self.client.set(self.lock_key, self.lock_value, nx=True, ex=self.expire):
+                return True
+
+            # 如果 timeout=None，就立即返回 False（非阻塞模式）
+            if timeout is None:
+                return False
+
+            # 如果超时了，返回 False
+            if (time.time() - start_time) >= timeout:
+                return False
+
+            # 否则继续循环尝试
+            time.sleep(0.05)  # 避免忙等
+
+    def release(self):
+        # 释放锁时必须保证是自己的锁
+        lua_script = """
+        if redis.call("get", KEYS[1]) == ARGV[1] then
+            return redis.call("del", KEYS[1])
+        else
+            return 0
+        end
+        """
+        release = self.client.register_script(lua_script)
+        return release(keys=[self.lock_key], args=[self.lock_value])
+
+
 # 示例用法
 if __name__ == "__main__":
-    redis_client = RedisClient(db=0)
+    redis_client = RedisClient()
 
     # 字符串操作
     redis_client.set("mykey", "value", ex_seconds=60)
