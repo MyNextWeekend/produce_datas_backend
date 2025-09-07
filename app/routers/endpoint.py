@@ -2,64 +2,46 @@
 接口配置信息
 """
 
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter
 
 from app.core.dependencies import SessionDep
-from app.core.exception import BusinessException, ErrorEnum, Resp
-from app.dao.endpoint import EndpointDao
+from app.core.exception import Resp
+from app.dao import Dao
 from app.models.first_model import Endpoint
-from app.vo import PageReq
-from app.vo.endpoint_vo import SearchVo
+from app.vo import IdReq, PageReq
+from app.vo.endpoint_vo import InsertReq, SearchVo, UpdateReq
 
 router = APIRouter(tags=["接口配置"])
 
 
+@router.post("/endpoint/add", summary="新增单个")
+async def create_endpoint(session: SessionDep, parm: InsertReq) -> Resp[bool]:
+    parm = Endpoint.model_validate(parm)
+    flag = Dao(session, Endpoint).insert(parm)
+    return Resp.success(flag)
+
+
+@router.delete("/endpoint/delete", summary="删除单个")
+async def delete_endpoint(session: SessionDep, parm: IdReq) -> Resp[bool]:
+    flag = Dao(session, Endpoint).delete_by_id(parm.id)
+    return Resp.success(flag)
+
+
+@router.put("/endpoint/update", summary="修改单个")
+async def update_endpoint(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
+    flag = Dao(session, Endpoint).update_by_id(parm)
+    return Resp.success(flag)
+
+
 @router.post("/endpoint/query", summary="查询所有")
-async def get_endpoints(session: SessionDep, query: PageReq[SearchVo]) -> Resp[List[Endpoint]]:
-    result = EndpointDao.query(session, query)
-    return Resp.success(result)
+async def get_endpoints(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Endpoint]]:
+    results = Dao(session, Endpoint).query(parm)
+    return Resp.success(results)
 
 
-@router.get("/{item_id}", summary="查询单个")
-async def get_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
-    return Resp.success(session.get(Endpoint, item_id))
-
-
-@router.delete("/{item_id}", summary="删除单个")
-async def delete_endpoint(item_id: int, session: SessionDep) -> Resp[Endpoint]:
-    endpoint = session.get(Endpoint, item_id)
-    if endpoint is None:
-        raise BusinessException.new(ErrorEnum.NOT_FOUND)
-    session.delete(endpoint)
-    session.commit()
-    return Resp.success(endpoint)
-
-
-@router.post("/", summary="新增单个")
-async def create_endpoint(endpoint: Endpoint, session: SessionDep) -> Resp[Endpoint]:
-    endpoint = Endpoint(
-        name=endpoint.name,
-        code=endpoint.code,
-        method=endpoint.method,
-        path=endpoint.path,
-        description=endpoint.description,
-        domain_code=endpoint.domain_code,
-    )
-    session.add(endpoint)
-    session.commit()
-    return Resp.success(endpoint)
-
-
-@router.put("/", summary="修改单个")
-async def update_endpoint(endpoint_new: Endpoint, session: SessionDep) -> Resp[Endpoint]:
-    db_endpoint = session.get(Endpoint, endpoint_new.id)
-    if db_endpoint is None:
-        raise BusinessException.new(ErrorEnum.NOT_FOUND)
-    endpoint_dic = endpoint_new.model_dump(exclude_unset=True)
-    db_endpoint.sqlmodel_update(endpoint_dic)
-    session.add(db_endpoint)
-    session.commit()
-    session.refresh(db_endpoint)
-    return Resp.success(db_endpoint)
+@router.get("/endpoint/info", summary="查询单个")
+async def get_endpoint(session: SessionDep, parm: IdReq) -> Resp[Optional[Endpoint]]:
+    results = Dao(session, Endpoint).query_by_id(parm.id)
+    return Resp.success(results)

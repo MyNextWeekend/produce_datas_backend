@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class InsertVO(BaseModel):
+class InsertReq(BaseModel):
     name: str  # 名称
     code: str  # 接口唯一code
     environment: str  # 环境标识:sit,uat
@@ -12,7 +12,7 @@ class InsertVO(BaseModel):
     description: Optional[str]  # 接口描述
 
 
-class UpdateVO(BaseModel):
+class UpdateReq(BaseModel):
     id: int
     name: Optional[str] = None  # 名称
     code: Optional[str] = None  # 接口唯一code
@@ -21,7 +21,7 @@ class UpdateVO(BaseModel):
     description: Optional[str] = None  # 接口描述
 
 
-class SearchVO(BaseModel):
+class SearchReq(BaseModel):
     id: Optional[int] = None
     name: Optional[str] = None  # 名称
     code: Optional[str] = None  # 接口唯一code
