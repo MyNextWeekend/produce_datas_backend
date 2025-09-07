@@ -18,13 +18,13 @@ router = APIRouter(tags=["域名环境"])
 
 @router.post("/domain/info", summary="查询单个")
 async def get_domain(session: SessionDep, parm: IdReq) -> Resp[Domain]:
-    return Resp.success(Dao(session, Domain).query_by_id(parm.id))
+    result = Dao(session, Domain).query_by_id(parm.id)
+    return Resp.success(result)
 
 
 @router.post("/domain/query", summary="查询所有")
 async def query_domain(session: SessionDep, parm: PageReq[SearchVO]) -> Resp[List[Domain]]:
-    domain_dao = Dao(session, Domain)
-    result = domain_dao.query(parm)
+    result = Dao(session, Domain).query(parm)
     return Resp.success(result)
 
 
