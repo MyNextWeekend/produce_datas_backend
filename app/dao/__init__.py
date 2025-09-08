@@ -15,8 +15,36 @@ class Dao(Generic[T]):
         self.session = session
         self.table_model = table_model
 
-    def query_by_id(self, obj_id: int) -> Optional[T]:
-        return self.session.get(self.table_model, obj_id)
+    def insert(self, obj: T, commit: bool = True) -> T:
+        self.session.add(obj)
+        if commit:
+            self.session.commit()
+            self.session.refresh(obj)
+        return obj
+
+    def delete_by_id(self, table_id: int, commit: bool = True) -> bool:
+        obj = self.query_by_id(table_id)
+        if not obj:
+            return False
+        self.session.delete(obj)
+        if commit:
+            self.session.commit()
+        return True
+
+    def update_by_id(self, parm: E, commit: bool = True) -> bool:
+        table_id = parm.id
+        if not table_id:
+            raise ValueError("table_id is required")
+        values = parm.model_dump(exclude_none=True, exclude={"id"})
+        stmt = (
+            update(self.table_model)
+            .where(self.table_model.id == table_id)
+            .values(**values)
+        )
+        self.session.exec(stmt)
+        if commit:
+            self.session.commit()
+        return True
 
     def query(self, parm: PageReq[E] = None) -> List[T]:
         stmt = select(self.table_model)
@@ -36,33 +64,5 @@ class Dao(Generic[T]):
                 stmt = stmt.order_by(asc(parm.sort_by))
         return self.session.exec(stmt).all()
 
-    def update_by_id(self, parm: E, commit: bool = True) -> bool:
-        table_id = parm.id
-        if not table_id:
-            raise ValueError("table_id is required")
-        values = parm.model_dump(exclude_none=True, exclude={"id"})
-        stmt = (
-            update(self.table_model)
-            .where(self.table_model.id == table_id)
-            .values(**values)
-        )
-        self.session.exec(stmt)
-        if commit:
-            self.session.commit()
-        return True
-
-    def insert(self, obj: T, commit: bool = True) -> T:
-        self.session.add(obj)
-        if commit:
-            self.session.commit()
-            self.session.refresh(obj)
-        return obj
-
-    def delete_by_id(self, table_id: int, commit: bool = True) -> bool:
-        obj = self.query_by_id(table_id)
-        if not obj:
-            return False
-        self.session.delete(obj)
-        if commit:
-            self.session.commit()
-        return True
+    def query_by_id(self, obj_id: int) -> Optional[T]:
+        return self.session.get(self.table_model, obj_id)

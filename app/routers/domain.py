@@ -17,20 +17,20 @@ router = APIRouter(tags=["域名环境"])
 
 
 @router.post("/domain/add", summary="新增单个")
-async def create_domain(session: SessionDep, parm: InsertReq) -> Resp[Domain]:
+async def create(session: SessionDep, parm: InsertReq) -> Resp[Domain]:
     obj = Domain.model_validate(parm)
     domain = Dao(session, Domain).insert(obj)
     return Resp.success(domain)
 
 
 @router.post("/domain/delete/", summary="删除单个")
-async def delete_domain(session: SessionDep, parm: IdReq) -> Resp[bool]:
+async def delete(session: SessionDep, parm: IdReq) -> Resp[bool]:
     flag = Dao(session, Domain).delete_by_id(parm.id)
     return Resp.success(flag)
 
 
 @router.post("/domain/update", summary="修改单个")
-async def update_domain(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
+async def update(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
     flag = Dao(session, Domain).update_by_id(parm)
     if not flag:
         raise BusinessException.new(ErrorEnum.NOT_FOUND)
@@ -38,12 +38,12 @@ async def update_domain(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
 
 
 @router.post("/domain/query", summary="查询所有")
-async def query_domain(session: SessionDep, parm: PageReq[SearchReq]) -> Resp[List[Domain]]:
+async def query(session: SessionDep, parm: PageReq[SearchReq]) -> Resp[List[Domain]]:
     result = Dao(session, Domain).query(parm)
     return Resp.success(result)
 
 
 @router.post("/domain/info", summary="查询单个")
-async def get_domain(session: SessionDep, parm: IdReq) -> Resp[Optional[Domain]]:
+async def info(session: SessionDep, parm: IdReq) -> Resp[Optional[Domain]]:
     result = Dao(session, Domain).query_by_id(parm.id)
     return Resp.success(result)
