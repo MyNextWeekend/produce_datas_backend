@@ -22,6 +22,12 @@ class Dao(Generic[T]):
             self.session.refresh(obj)
         return obj
 
+    def batch_insert(self, objs: List[T], commit: bool = True) -> bool:
+        self.session.add_all(objs)
+        if commit:
+            self.session.commit()
+        return True
+
     def delete_by_id(self, table_id: int, commit: bool = True) -> bool:
         obj = self.query_by_id(table_id)
         if not obj:
@@ -46,7 +52,7 @@ class Dao(Generic[T]):
             self.session.commit()
         return True
 
-    def query(self, parm: PageReq[E] = None) -> List[T]:
+    def query(self, parm: PageReq[E]) -> List[Optional[T]]:
         stmt = select(self.table_model)
         filter_obj = parm.filter
         # 动态组装查询条件
