@@ -52,7 +52,7 @@ def get_user_by_token(token: HeaderDep, session: SessionDep) -> UserService:
     return user
 
 
-UserDep = Annotated[User, Depends(get_user_by_token)]
+UserDep = Annotated[UserService, Depends(get_user_by_token)]
 
 
 class Role(str, Enum):
@@ -70,13 +70,13 @@ def require_role(required_role: Role):
         if user.get_role() != required_role.value:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied for role: {user['role']}",
+                detail=f"Permission denied for role: {user.get_role()}",
             )
         return user
 
     return role_checker
 
 
-AdminRoleDep = Annotated[User, Depends(require_role(Role.ADMIN))]
-UserRoleDep = Annotated[User, Depends(require_role(Role.USER))]
-GuestRoleDep = Annotated[User, Depends(require_role(Role.GUEST))]
+AdminRoleDep = Annotated[UserService, Depends(require_role(Role.ADMIN))]
+UserRoleDep = Annotated[UserService, Depends(require_role(Role.USER))]
+GuestRoleDep = Annotated[UserService, Depends(require_role(Role.GUEST))]

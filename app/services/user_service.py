@@ -15,5 +15,5 @@ class UserService:
         client = RedisClient()
         client.delete(self.token)
 
-    def get_role(self):
+    def get_role(self) -> str:
         return self.db_user.role
