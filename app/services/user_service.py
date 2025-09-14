@@ -1,19 +1,42 @@
+from typing import Self
+
+from app.core.dependencies import SessionDep
+from app.core.exception import BusinessException, ErrorEnum
+from app.dao import Dao
 from app.models.first_model import User
 from app.utils.redis_utils import RedisClient
 
 
 class UserService:
-    def __init__(self, db_user: User, token: str) -> None:
+    TOKEN_EXPIRE_SECONDS = 60 * 60  # 1h
+    _redis = RedisClient()
+
+    def __init__(self, token: str, db_user: User) -> None:
         self.token = token
         self.db_user = db_user
 
+    @classmethod
+    def from_token(cls, token: str | None, session: SessionDep) -> Self:
+        if token is None:
+            raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
+        user_id = cls._redis.get(token)
+        if user_id is None:
+            raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
+        db_user: User | None = Dao(session, User).query_by_id(int(user_id))
+        if db_user is None:
+            raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
+        return cls(token, db_user)
+
     def refresh(self):
-        client = RedisClient()
-        client.set(self.token, "", ex_seconds=60 * 60)
+        self._redis.set(self.token, "", ex_seconds=self.TOKEN_EXPIRE_SECONDS)
 
     def logout(self):
-        client = RedisClient()
-        client.delete(self.token)
+        self._redis.delete(self.token)
 
-    def get_role(self) -> str:
+    @property
+    def role(self) -> str:
         return self.db_user.role
+
+    @property
+    def user_id(self) -> int:
+        return self.db_user.id
