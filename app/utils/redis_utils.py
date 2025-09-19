@@ -18,7 +18,8 @@ class _RedisClient:
 
     def get(self, key: str) -> Optional[str]:
         """获取键的值"""
-        return self.client.get(key)
+        value = self.client.get(key)
+        return value.decode("utf-8") if value is not None else None
 
     def delete(self, key: str) -> int:
         """删除一个或多个键"""
@@ -82,7 +83,7 @@ class RedisLock:
         self.lock_key = lock_key
         self.expire_nx = expire_nx
         self.lock_value = str(uuid.uuid4())  # 用唯一值标识这个客户端持有的锁
-    
+
     def acquire(self, timeout: int = None) -> bool:
         start_time = time.time()
         while True:

@@ -11,7 +11,7 @@ class InsertReq(BaseModel):
 
 
 class UpdateReq(BaseModel):
-    id: Optional[int] = None
+    id: int = None
     key_name: Optional[str] = None  # 参数键
     value: Optional[str] = None  # 参数值
     description: Optional[str] = None  # 参数描述

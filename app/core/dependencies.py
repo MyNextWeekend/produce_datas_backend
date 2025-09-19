@@ -27,12 +27,12 @@ SessionDep = Annotated[Session, Depends(get_session)]
 HeaderDep = Annotated[str | None, Header()]
 
 
-def get_user_by_token(token: HeaderDep, session: SessionDep) -> UserService:
+def get_user_by_token(token: HeaderDep) -> UserService:
     """
     校验 请求头 header 中的 token
     并且从数据库获取 用户信息
     """
-    user = UserService.from_token(token, session)
+    user = UserService.from_token(token)
     # 续 token 有效时间
     user.refresh()
     return user

@@ -6,7 +6,7 @@ from app.utils.log_utils import logger
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
     """
     哈希密码
     :param password: 密码

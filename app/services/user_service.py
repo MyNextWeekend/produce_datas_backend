@@ -1,11 +1,9 @@
 from typing import Self
 
-from sqlmodel import Session
-
 from app.core.config import settings
 from app.core.exception import BusinessException, ErrorEnum
-from app.dao import Dao
 from app.models.first_model import User
+from app.utils.log_utils import logger
 from app.utils.redis_utils import redis_client
 from app.utils.snow_utils import snowflake_generator
 
@@ -17,16 +15,17 @@ class UserService:
         self.db_user = db_user
 
     @classmethod
-    def from_token(cls, token: str | None, session: Session) -> Self:
+    def from_token(cls, token: str | None) -> Self:
         if token is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
-        user_id = redis_client.get(token)
-        if user_id is None:
+        user = redis_client.get(token)
+        if user is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
-        db_user: User | None = Dao(session, User).query_by_id(int(user_id))
-        if db_user is None:
+        logger.info(f"redis 获取的用户信息是:{user}")
+        user = User.model_validate_json(user)
+        if user is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
-        return cls(token, db_user)
+        return cls(token, user)
 
     @classmethod
     def from_user(cls, user: User) -> Self:
