@@ -39,6 +39,7 @@ class UserService:
 
     def logout(self):
         self._redis.delete(self.token)
+        return True
 
     @property
     def role(self) -> str:
