@@ -23,13 +23,13 @@ async def create(session: SessionDep, parm: InsertReq) -> Resp[Endpoint]:
     return Resp.success(result)
 
 
-@router.delete("/endpoint/delete", summary="删除单个")
+@router.post("/endpoint/delete", summary="删除单个")
 async def delete(session: SessionDep, parm: IdReq) -> Resp[bool]:
     flag = Dao(session, Endpoint).delete_by_id(parm.id)
     return Resp.success(flag)
 
 
-@router.put("/endpoint/update", summary="修改单个")
+@router.post("/endpoint/update", summary="修改单个")
 async def update(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
     flag = Dao(session, Endpoint).update_by_id(parm)
     return Resp.success(flag)
@@ -41,7 +41,7 @@ async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Endpo
     return Resp.success(results)
 
 
-@router.get("/endpoint/info", summary="查询单个")
+@router.post("/endpoint/info", summary="查询单个")
 async def info(session: SessionDep, parm: IdReq) -> Resp[Optional[Endpoint]]:
     results = Dao(session, Endpoint).query_by_id(parm.id)
     return Resp.success(results)
