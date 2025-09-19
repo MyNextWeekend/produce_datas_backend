@@ -42,7 +42,7 @@ class UserService:
         return True
 
     @property
-    def role(self) -> str:
+    def role(self) -> int:
         return self.db_user.role
 
     @property

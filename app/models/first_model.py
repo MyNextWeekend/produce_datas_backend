@@ -149,6 +149,10 @@ class User(SQLModel, table=True):
     __table_args__ = {'comment': '用户信息'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
-    username: str = Field(sa_column=Column('username', String(50), comment='账号'))
-    password: str = Field(sa_column=Column('password', String(50), comment='密码'))
-    created_at: Optional[datetime] = Field(default=None, sa_column=Column('created_at', DateTime, server_default=text('CURRENT_TIMESTAMP'), comment='创建时间'))
+    username: str = Field(sa_column=Column('username', String(64, 'utf8mb4_unicode_ci'), comment='账号'))
+    password: str = Field(sa_column=Column('password', String(128, 'utf8mb4_unicode_ci'), comment='密码'))
+    email: str = Field(sa_column=Column('email', String(100, 'utf8mb4_unicode_ci'), comment='邮箱'))
+    role: int = Field(sa_column=Column('role', Integer, comment='角色'))
+    is_active: Optional[int] = Field(default=None, sa_column=Column('is_active', TINYINT(1), server_default=text("'1'"), comment='是否启用'))
+    created_at: Optional[datetime] = Field(default=None, sa_column=Column('created_at', TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'), comment='创建时间'))
+    updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')))

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Self
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Depends, Header
 from sqlalchemy import create_engine
 from sqlmodel import Session
 
 from app.core.config import settings
+from app.core.exception import BusinessException, ErrorEnum
 from app.services.user_service import UserService
 
 engine = create_engine(str(settings.mysql.uri), echo=True, pool_size=8, pool_recycle=60 * 30)
@@ -40,10 +41,17 @@ def get_user_by_token(token: HeaderDep, session: SessionDep) -> UserService:
 UserDep = Annotated[UserService, Depends(get_user_by_token)]
 
 
-class Role(str, Enum):
-    ADMIN = "admin"
-    USER = "user"
-    GUEST = "guest"
+class Role(int, Enum):
+    ADMIN = 1
+    USER = 2
+    GUEST = 3
+
+    @classmethod
+    def from_role(cls, role_int: int) -> Self:
+        for role in Role:
+            if role.value == role_int:
+                return role
+        raise BusinessException.new(ErrorEnum.INVALID_ROLE)
 
 
 def require_role(required_role: Role):
@@ -51,15 +59,13 @@ def require_role(required_role: Role):
     管理 api 特定权限的用户访问
     """
 
-    def role_checker(user: UserDep) -> UserService:
-        if user.role != required_role.value:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied for role: {user.role}",
-            )
+    def inner(user: UserDep) -> UserService:
+        # 大于指定的权限即可（数值越小，权限越大）
+        if Role.from_role(user.role).value > required_role.value:
+            raise BusinessException.new(ErrorEnum.PERMISSION_DENIED)
         return user
 
-    return role_checker
+    return inner
 
 
 AdminRoleDep = Annotated[UserService, Depends(require_role(Role.ADMIN))]

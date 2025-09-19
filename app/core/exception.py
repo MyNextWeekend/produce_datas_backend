@@ -52,6 +52,7 @@ class ErrorEnum(Enum):
     RESOURCE_LOCKED = (925, "资源被锁定，无法修改")
     VALIDATION_ERROR = (926, "数据校验失败")
     OPERATION_FAILED = (927, "操作失败，请重试")
+    INVALID_ROLE = (928, "不合法的角色")
 
     def __init__(self, code: int, message: str):
         self.code = code

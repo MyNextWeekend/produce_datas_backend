@@ -14,7 +14,7 @@ def get_table_info():
 
 def write_file(info: str):
     file = settings.root_dir.joinpath("app").joinpath("models")
-    with open(file.joinpath(f"{settings.db_database}_model.py"), "w") as f:
+    with open(file.joinpath(f"{settings.mysql.database}_model.py"), "w") as f:
         f.write(f"# {'=' * 69}\n")
         f.write(f"# {'=' * 10}")
         f.write(" Automatically generate file, do not modify it ! ")
