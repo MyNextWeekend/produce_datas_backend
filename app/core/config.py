@@ -53,6 +53,7 @@ class LogSettings(BaseSettings):
 class Settings(BaseSettings):
     # 路由前缀
     prefix: str
+    token_expire_seconds: int
     # 项目的根目录
     root_dir: PosixPath = Path(__file__).resolve().parent.parent.parent
     local_repository: PosixPath = root_dir / 'local_repository'

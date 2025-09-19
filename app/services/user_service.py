@@ -1,16 +1,16 @@
 from typing import Self
 
+from app.core.config import settings
 from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum
 from app.dao import Dao
 from app.models.first_model import User
-from app.utils.redis_utils import RedisClient
+from app.utils.redis_utils import redis_client
 from app.utils.snow_utils import snowflake_generator
 
 
 class UserService:
     TOKEN_EXPIRE_SECONDS = 60 * 60  # 1h
-    _redis = RedisClient()
 
     def __init__(self, token: str, db_user: User) -> None:
         self.token = token
@@ -20,7 +20,7 @@ class UserService:
     def from_token(cls, token: str | None, session: SessionDep) -> Self:
         if token is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
-        user_id = cls._redis.get(token)
+        user_id = redis_client.get(token)
         if user_id is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
         db_user: User | None = Dao(session, User).query_by_id(int(user_id))
@@ -29,16 +29,16 @@ class UserService:
         return cls(token, db_user)
 
     @classmethod
-    def login(cls, user: User) -> str:
+    def from_user(cls, user: User) -> Self:
         token = f"token_{snowflake_generator.generate_id()}"
-        cls._redis.set(token, user.model_dump_json(), cls.TOKEN_EXPIRE_SECONDS)
-        return token
+        redis_client.set(token, user.model_dump_json(), settings.token_expire_seconds)
+        return cls(token, user)
 
     def refresh(self):
-        self._redis.set(self.token, "", ex_seconds=self.TOKEN_EXPIRE_SECONDS)
+        redis_client.set(self.token, self.db_user.model_dump_json(), ex_seconds=settings.token_expire_seconds)
 
-    def logout(self):
-        self._redis.delete(self.token)
+    def logout(self) -> bool:
+        redis_client.delete(self.token)
         return True
 
     @property

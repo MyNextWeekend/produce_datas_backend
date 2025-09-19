@@ -23,7 +23,8 @@ async def login(user: UserLogin, session: SessionDep) -> Resp[dict[str, str]]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
     if not verify_password(str(user.password), str(db_user.password)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户名或者密码错误")
-    return Resp.success({"token": UserService.login(db_user)})
+    user = UserService.from_user(db_user)
+    return Resp.success({"token": user.token})
 
 
 @router.post("/info", summary="查询权限")

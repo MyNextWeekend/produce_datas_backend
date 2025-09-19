@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.utils.log_utils import logger
 
 
-class RedisClient:
+class _RedisClient:
     def __init__(self):
         self.client = redis.from_url(settings.redis.uri)
 
@@ -73,18 +73,21 @@ class RedisClient:
         self.client.close()
 
 
-class RedisLock:
-    def __init__(self, client: redis.Redis, lock_key: str, expire: int = 10):
-        self.client = client
-        self.lock_key = lock_key
-        self.expire = expire
-        self.lock_value = str(uuid.uuid4())  # 用唯一值标识这个客户端持有的锁
+redis_client = _RedisClient()
 
+
+class RedisLock:
+    def __init__(self, lock_key: str, expire_nx: int = 10):
+        self.client = redis_client.client
+        self.lock_key = lock_key
+        self.expire_nx = expire_nx
+        self.lock_value = str(uuid.uuid4())  # 用唯一值标识这个客户端持有的锁
+    
     def acquire(self, timeout: int = None) -> bool:
         start_time = time.time()
         while True:
             # 尝试获取锁
-            if self.client.set(self.lock_key, self.lock_value, nx=True, ex=self.expire):
+            if self.client.set(self.lock_key, self.lock_value, nx=True, ex=self.expire_nx):
                 return True
 
             # 如果 timeout=None，就立即返回 False（非阻塞模式）
@@ -113,8 +116,6 @@ class RedisLock:
 
 # 示例用法
 if __name__ == "__main__":
-    redis_client = RedisClient()
-
     # 字符串操作
     redis_client.set("mykey", "value", ex_seconds=60)
     logger.info(f"获取redis中的数据:{redis_client.get('mykey')}")
