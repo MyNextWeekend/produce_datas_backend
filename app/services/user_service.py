@@ -1,7 +1,8 @@
 from typing import Self
 
+from sqlmodel import Session
+
 from app.core.config import settings
-from app.core.dependencies import SessionDep
 from app.core.exception import BusinessException, ErrorEnum
 from app.dao import Dao
 from app.models.first_model import User
@@ -16,7 +17,7 @@ class UserService:
         self.db_user = db_user
 
     @classmethod
-    def from_token(cls, token: str | None, session: SessionDep) -> Self:
+    def from_token(cls, token: str | None, session: Session) -> Self:
         if token is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
         user_id = redis_client.get(token)
