@@ -10,9 +10,8 @@ from app.utils.snow_utils import snowflake_generator
 
 
 class UserService:
-    TOKEN_EXPIRE_SECONDS = 60 * 60  # 1h
 
-    def __init__(self, token: str, db_user: User) -> None:
+    def __init__(self, token: str, db_user: User):
         self.token = token
         self.db_user = db_user
 
