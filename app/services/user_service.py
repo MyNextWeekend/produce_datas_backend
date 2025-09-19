@@ -5,6 +5,7 @@ from app.core.exception import BusinessException, ErrorEnum
 from app.dao import Dao
 from app.models.first_model import User
 from app.utils.redis_utils import RedisClient
+from app.utils.snow_utils import snowflake_generator
 
 
 class UserService:
@@ -26,6 +27,12 @@ class UserService:
         if db_user is None:
             raise BusinessException.new(ErrorEnum.UNAUTHORIZED)
         return cls(token, db_user)
+
+    @classmethod
+    def login(cls, user: User) -> str:
+        token = f"token_{snowflake_generator.generate_id()}"
+        cls._redis.set(token, user.model_dump_json(), cls.TOKEN_EXPIRE_SECONDS)
+        return token
 
     def refresh(self):
         self._redis.set(self.token, "", ex_seconds=self.TOKEN_EXPIRE_SECONDS)
