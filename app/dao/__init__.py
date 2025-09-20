@@ -79,7 +79,7 @@ class Dao(Generic[T]):
                 if hasattr(self.table_model, field):
                     stmt = stmt.where(getattr(self.table_model, field) == value)
 
-        return self.session.exec(stmt).all()
+        return self.session.exec(stmt).first()
 
     def query_by_id(self, obj_id: int) -> Optional[T]:
         return self.session.get(self.table_model, obj_id)
