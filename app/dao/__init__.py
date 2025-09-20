@@ -1,7 +1,7 @@
 from typing import Generic, List, Optional, Type, TypeVar
 
 from pydantic import BaseModel
-from sqlalchemy import func, update
+from sqlalchemy import Select, func, update
 from sqlmodel import Session, SQLModel, asc, desc, select
 
 from app.vo import PageReq, SortOrderEnum
@@ -52,14 +52,18 @@ class Dao(Generic[T]):
             self.session.commit()
         return True
 
-    def query(self, parm: PageReq[E]) -> List[Optional[T]]:
-        stmt = select(self.table_model)
-        filter_obj = parm.filter
-        # 动态组装查询条件
-        if filter_obj:
-            for field, value in parm.filter.model_dump(exclude_none=True).items():
+    def apply_filters(self, stmt: Select, filter_model: Optional[E]) -> Select:
+        """给查询语句动态拼接过滤条件"""
+        if filter_model:
+            for field, value in filter_model.model_dump(exclude_none=True).items():
                 if hasattr(self.table_model, field):
                     stmt = stmt.where(getattr(self.table_model, field) == value)
+        return stmt
+
+    def query(self, parm: PageReq[E]) -> List[Optional[T]]:
+        stmt = select(self.table_model)
+        # 动态组装查询条件
+        stmt = self.apply_filters(stmt, parm.filter)
         # 分页查询
         stmt = stmt.limit(parm.page_size).offset((parm.page - 1) * parm.page_size)
         # 排序字段
@@ -72,12 +76,8 @@ class Dao(Generic[T]):
 
     def statistic(self, parm: PageReq[E]) -> int:
         stmt = select(func.count(self.table_model.id).label("total"))
-        filter_obj = parm.filter
         # 动态组装查询条件
-        if filter_obj:
-            for field, value in parm.filter.model_dump(exclude_none=True).items():
-                if hasattr(self.table_model, field):
-                    stmt = stmt.where(getattr(self.table_model, field) == value)
+        stmt = self.apply_filters(stmt, parm.filter)
 
         return self.session.exec(stmt).first()
 

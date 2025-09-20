@@ -9,6 +9,7 @@ from fastapi import APIRouter
 from app.core.dependencies import SessionDep
 from app.core.exception import Resp
 from app.dao import Dao
+from app.dao.endpoint import EndpointDao
 from app.models.first_model import Endpoint
 from app.vo import IdReq, PageReq
 from app.vo.endpoint_vo import InsertReq, SearchVo, UpdateReq
@@ -37,7 +38,7 @@ async def update(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
 
 @router.post("/endpoint/query", summary="查询所有")
 async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Endpoint]]:
-    results = Dao(session, Endpoint).query(parm)
+    results = EndpointDao(session).query(parm)
     return Resp.success(results)
 
 
