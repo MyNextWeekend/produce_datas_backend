@@ -31,6 +31,11 @@ async def login(user: UserLogin, session: SessionDep) -> Resp[dict[str, str]]:
     return Resp.success({"token": user.token})
 
 
+@router.post("/user/permission", summary="权限信息")
+async def permission(user: UserDep) -> Resp[dict[str, str]]:
+    return Resp.success({"roles": "admin", "name": user.db_user.username, "avatar": "", "introduction": ""})
+
+
 @router.post("/user/logout", summary="退出")
 async def logout(user: UserDep) -> Resp[bool]:
     return Resp.success(bool(user.logout()))
