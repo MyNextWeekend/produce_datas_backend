@@ -11,7 +11,7 @@ from app.core.exception import Resp
 from app.dao import Dao
 from app.models.first_model import CustomParameter
 from app.vo import IdReq, PageReq
-from app.vo.parameter_vo import InsertReq, SearchVo, UpdateReq
+from app.vo.parameter_vo import InsertReq, SearchVo, StatisticResp, UpdateReq
 
 router = APIRouter(tags=["参数"])
 
@@ -42,9 +42,9 @@ async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Custo
 
 
 @router.post("/parameter/statistic", summary="统计")
-async def statistic(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[int]:
-    results = Dao(session, CustomParameter).statistic(parm)
-    return Resp.success(results)
+async def statistic(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[StatisticResp]:
+    total = Dao(session, CustomParameter).statistic(parm)
+    return Resp.success(StatisticResp(total=total))
 
 
 @router.post("/parameter/info", summary="查询单个")
