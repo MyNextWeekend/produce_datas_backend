@@ -11,8 +11,7 @@ from app.core.exception import Resp
 from app.dao import Dao
 from app.models.first_model import CustomParameter
 from app.vo import IdReq, PageReq
-from app.vo.endpoint_vo import InsertReq
-from app.vo.parameter_vo import SearchVo, UpdateReq
+from app.vo.parameter_vo import InsertReq, SearchVo, UpdateReq
 
 router = APIRouter(tags=["参数"])
 

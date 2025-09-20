@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from app.vo import BaseVo
 
 
-class InsertReq(BaseModel):
+class InsertReq(BaseVo):
     name: str  # 名称
     code: str  # 接口唯一code
     environment: str  # 环境标识:sit,uat
@@ -12,7 +12,7 @@ class InsertReq(BaseModel):
     description: Optional[str]  # 接口描述
 
 
-class UpdateReq(BaseModel):
+class UpdateReq(BaseVo):
     id: int
     name: Optional[str] = None  # 名称
     code: Optional[str] = None  # 接口唯一code
@@ -21,7 +21,7 @@ class UpdateReq(BaseModel):
     description: Optional[str] = None  # 接口描述
 
 
-class SearchReq(BaseModel):
+class SearchReq(BaseVo):
     id: Optional[int] = None
     name: Optional[str] = None  # 名称
     code: Optional[str] = None  # 接口唯一code

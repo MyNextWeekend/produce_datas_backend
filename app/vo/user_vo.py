@@ -1,22 +1,22 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from app.vo import BaseVo
 
 
-class UserLogin(BaseModel):
+class UserLogin(BaseVo):
     username: str
     password: str
 
 
-class InsertReq(BaseModel):
+class InsertReq(BaseVo):
     username: str  # 账号
     password: str  # 密码
     email: str  # 邮箱
     role: int  # 角色
 
 
-class UpdateReq(BaseModel):
+class UpdateReq(BaseVo):
     id: int = None
     username: Optional[str] = None  # 账号
     password: Optional[str] = None  # 密码
@@ -25,7 +25,7 @@ class UpdateReq(BaseModel):
     is_active: Optional[int] = None
 
 
-class SearchVo(BaseModel):
+class SearchVo(BaseVo):
     id: Optional[int] = None  # id
     username: Optional[str] = None  # 账号
     password: Optional[str] = None  # 密码

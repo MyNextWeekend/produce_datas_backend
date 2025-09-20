@@ -1,14 +1,15 @@
 # =====================================================================
 # ========== Automatically generate file, do not modify it ! ==========
 # =====================================================================
+from app.models import CamelModel
 from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import BigInteger, Column, DateTime, Index, Integer, String, TIMESTAMP, Text, text
 from sqlalchemy.dialects.mysql import MEDIUMBLOB, TINYINT
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field
 
-class CustomParameter(SQLModel, table=True):
+class CustomParameter(CamelModel, table=True):
     __tablename__ = 'custom_parameter'
     __table_args__ = {'comment': '存放自定义参数信息'}
 
@@ -20,7 +21,7 @@ class CustomParameter(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class DatabaseInfo(SQLModel, table=True):
+class DatabaseInfo(CamelModel, table=True):
     __tablename__ = 'database_info'
     __table_args__ = {'comment': '数据库相关信息'}
 
@@ -37,7 +38,7 @@ class DatabaseInfo(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class Domain(SQLModel, table=True):
+class Domain(CamelModel, table=True):
     __table_args__ = (
         Index('code_environment_unique', 'code', 'environment', unique=True),
         {'comment': '接口域名表'}
@@ -53,7 +54,7 @@ class Domain(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class Endpoint(SQLModel, table=True):
+class Endpoint(CamelModel, table=True):
     __table_args__ = (
         Index('code_unique', 'code', unique=True),
         {'comment': '接口基本信息表'}
@@ -71,7 +72,7 @@ class Endpoint(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class Report(SQLModel, table=True):
+class Report(CamelModel, table=True):
     __table_args__ = {'comment': '存放测试报告信息'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
@@ -82,7 +83,7 @@ class Report(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class ReportDetail(SQLModel, table=True):
+class ReportDetail(CamelModel, table=True):
     __tablename__ = 'report_detail'
     __table_args__ = {'comment': '存储用例执行产生的日志或截图信息'}
 
@@ -93,7 +94,7 @@ class ReportDetail(SQLModel, table=True):
     created_at: Optional[datetime] = Field(default=None, sa_column=Column('created_at', DateTime, server_default=text('CURRENT_TIMESTAMP'), comment='创建时间'))
 
 
-class Repository(SQLModel, table=True):
+class Repository(CamelModel, table=True):
     __table_args__ = {'comment': '存放 Git 仓库地址'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
@@ -105,7 +106,7 @@ class Repository(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class RepositoryDetail(SQLModel, table=True):
+class RepositoryDetail(CamelModel, table=True):
     __tablename__ = 'repository_detail'
     __table_args__ = {'comment': '存放 Git 仓库地址'}
 
@@ -121,7 +122,7 @@ class RepositoryDetail(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class Schedule(SQLModel, table=True):
+class Schedule(CamelModel, table=True):
     __table_args__ = {'comment': '存放任务的定时信息'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
@@ -132,7 +133,7 @@ class Schedule(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class Task(SQLModel, table=True):
+class Task(CamelModel, table=True):
     __table_args__ = {'comment': '存放任务信息'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
@@ -145,7 +146,7 @@ class Task(SQLModel, table=True):
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间'))
 
 
-class User(SQLModel, table=True):
+class User(CamelModel, table=True):
     __table_args__ = {'comment': '用户信息'}
 
     id: Optional[int] = Field(default=None, sa_column=Column('id', BigInteger, primary_key=True))
