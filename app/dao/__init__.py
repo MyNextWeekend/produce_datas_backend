@@ -1,7 +1,7 @@
 from typing import Generic, List, Optional, Type, TypeVar
 
 from pydantic import BaseModel
-from sqlalchemy import update
+from sqlalchemy import func, update
 from sqlmodel import Session, SQLModel, asc, desc, select
 
 from app.vo import PageReq, SortOrderEnum
@@ -68,6 +68,17 @@ class Dao(Generic[T]):
                 stmt = stmt.order_by(desc(parm.sort_by))
             else:
                 stmt = stmt.order_by(asc(parm.sort_by))
+        return self.session.exec(stmt).all()
+
+    def statistic(self, parm: PageReq[E]) -> int:
+        stmt = select(func.count(self.table_model.id).label("total"))
+        filter_obj = parm.filter
+        # 动态组装查询条件
+        if filter_obj:
+            for field, value in parm.filter.model_dump(exclude_none=True).items():
+                if hasattr(self.table_model, field):
+                    stmt = stmt.where(getattr(self.table_model, field) == value)
+
         return self.session.exec(stmt).all()
 
     def query_by_id(self, obj_id: int) -> Optional[T]:

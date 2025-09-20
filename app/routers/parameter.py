@@ -41,6 +41,12 @@ async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Custo
     return Resp.success(results)
 
 
+@router.post("/parameter/statistic", summary="统计")
+async def statistic(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[int]]:
+    results = Dao(session, CustomParameter).statistic(parm)
+    return Resp.success(results)
+
+
 @router.post("/parameter/info", summary="查询单个")
 async def info(session: SessionDep, parm: IdReq) -> Resp[Optional[CustomParameter]]:
     results = Dao(session, CustomParameter).query_by_id(parm.id)
