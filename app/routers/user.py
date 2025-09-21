@@ -20,7 +20,7 @@ router = APIRouter(tags=["用户"])
 
 
 @router.post("/user/login", summary="登陆")
-async def login(user: UserLogin, session: SessionDep) -> Resp[dict[str, str]]:
+async def login(session: SessionDep, user: UserLogin) -> Resp[dict[str, str]]:
     db_user = UserDao(session).query_by_username(user.username)
     logger.info(f"查询用户的结果:{db_user}")
     if not db_user:
