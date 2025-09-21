@@ -13,7 +13,7 @@ from app.models.first_model import User
 from app.services.user_service import UserService
 from app.utils.encrypt_utils import get_password_hash, verify_password
 from app.utils.log_utils import logger
-from app.vo import IdReq, PageReq
+from app.vo import IdReq, PageReq, StatisticResp
 from app.vo.user_vo import InsertReq, SearchVo, UpdateReq, UserLogin
 
 router = APIRouter(tags=["用户"])
@@ -68,6 +68,12 @@ async def update(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
 async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[User]]:
     result = Dao(session, User).query(parm)
     return Resp.success(result)
+
+
+@router.post("/user/statistic", summary="统计")
+async def statistic(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[StatisticResp]:
+    total = Dao(session, User).statistic(parm)
+    return Resp.success(StatisticResp(total=total))
 
 
 @router.post("/user/info", summary="查询单个")

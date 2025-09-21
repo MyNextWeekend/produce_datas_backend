@@ -11,7 +11,7 @@ from app.core.exception import Resp
 from app.dao import Dao
 from app.dao.endpoint import EndpointDao
 from app.models.first_model import Endpoint
-from app.vo import IdReq, PageReq
+from app.vo import IdReq, PageReq, StatisticResp
 from app.vo.endpoint_vo import InsertReq, SearchVo, UpdateReq
 
 router = APIRouter(tags=["接口配置"])
@@ -40,6 +40,12 @@ async def update(session: SessionDep, parm: UpdateReq) -> Resp[bool]:
 async def query(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[List[Endpoint]]:
     results = EndpointDao(session).query(parm)
     return Resp.success(results)
+
+
+@router.post("/endpoint/statistic", summary="统计")
+async def statistic(session: SessionDep, parm: PageReq[SearchVo]) -> Resp[StatisticResp]:
+    total = Dao(session, Endpoint).statistic(parm)
+    return Resp.success(StatisticResp(total=total))
 
 
 @router.post("/endpoint/info", summary="查询单个")

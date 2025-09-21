@@ -35,3 +35,7 @@ class PageReq(BaseVo, Generic[T]):
 
 class IdReq(BaseVo):
     id: int
+
+
+class StatisticResp(BaseVo):
+    total: int
