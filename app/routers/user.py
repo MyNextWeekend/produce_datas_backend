@@ -1,6 +1,7 @@
 """
 数据库配置
 """
+
 from typing import List, Optional
 
 from fastapi import APIRouter
@@ -33,7 +34,7 @@ async def login(session: SessionDep, user: UserLogin) -> Resp[dict[str, str]]:
 
 @router.post("/user/permission", summary="权限信息")
 async def permission(user: UserDep) -> Resp[dict[str, str]]:
-    return Resp.success({"roles": "admin", "name": user.db_user.username, "avatar": "", "introduction": ""})
+    return Resp.success({"roles": ["admin"], "name": user.db_user.username, "avatar": "", "introduction": ""})
 
 
 @router.post("/user/logout", summary="退出")
